@@ -92,3 +92,12 @@ define('EVENT_PRIORITY_NORMAL', 100);
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_HIGH instead.
  */
 define('EVENT_PRIORITY_HIGH', 10);
+
+/*
+ | --------------------------------------------------------------------------
+ | Custom Constant
+ | --------------------------------------------------------------------------
+ */
+define('ROLE_ADMIN', 1);
+define('ROLE_TEACHER', 2);
+define('ROLE_STUDENT', 3);
