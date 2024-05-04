@@ -46,9 +46,14 @@ class Schedule extends BaseController
             }
         }
 
+        $subTitle = '';
+        if ($class) {
+            $subTitle = ' | ' . $class['code'] . ' | Semester ' . $semester;
+        }
+
         $data = [
             'title' => 'LSM - Jadwal Mapel',
-            'subTitle' => $class['code'] . ' | Semester ' . $semester,
+            'subTitle' => $subTitle,
             'schedules' => $schedules,
             'schedulesMap' => $schedulesMap,
             'classes' => $classes,

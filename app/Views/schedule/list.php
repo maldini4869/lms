@@ -18,7 +18,7 @@
     <!-- Page Heading -->
     <div class="row mb-3">
         <div class="col-md-6">
-            <h1 class="h3 mb-2 text-gray-800">Jadwal Mata Pelajaran | <?= $subTitle; ?></h1>
+            <h1 class="h3 mb-2 text-gray-800">Jadwal Mata Pelajaran <?= $subTitle; ?></h1>
         </div>
         <div class="col-md-6">
             <a class="btn btn-primary float-right" href="/jadwal-mapel/tambah" role="button">Tambah</a>
