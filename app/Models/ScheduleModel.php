@@ -8,7 +8,7 @@ class ScheduleModel extends Model
 {
     protected $table      = 'schedule';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['code', 'class_id', 'teacher_id', 'teacher_subject_id', 'day', 'start_period', 'end_period'];
+    protected $allowedFields = ['code', 'class_id', 'teacher_id', 'teacher_subject_id', 'semester', 'day', 'start_period', 'end_period'];
     protected $useTimestamps = true;
 
     public function getSchedules($classId, $semester)
