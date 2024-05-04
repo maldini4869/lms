@@ -21,6 +21,9 @@
     <!-- Custom styles for datatables -->
     <link href="/css/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+    <!-- Custom styles for bootstrap-select -->
+    <link href="/css/bootstrap-select.min.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -98,7 +101,32 @@
     <script src="/js/datatables/dataTables.bootstrap4.min.js"></script>
 
     <!-- Datatables custom scripts -->
-    <script src="js/datatables-demo.js"></script>
+    <script src="/js/datatables.js"></script>
+
+    <!-- Bootstrap-select custom scripts -->
+    <script src="/js/bootstrap-select.min.js"></script>
+
+
+    <!-- Custom image-preview scripts -->
+    <script>
+        function previewImg() {
+            const profilePicture = document.querySelector('#profile_picture');
+            const profilePictureLabel = document.querySelector('.custom-file-label');
+            const profilePicturePreview = document.querySelector('.img-preview');
+
+            profilePictureLabel.textContent = profilePicture.files[0].name;
+
+            const profilePictureFile = new FileReader();
+            profilePictureFile.readAsDataURL(profilePicture.files[0])
+
+            profilePictureFile.onload = function(e) {
+                profilePicturePreview.src = e.target.result;
+            }
+        }
+    </script>
+
+    <!-- Custom period-picker scripts -->
+    <script src="/js/period-picker.js"></script>
 </body>
 
 </html>

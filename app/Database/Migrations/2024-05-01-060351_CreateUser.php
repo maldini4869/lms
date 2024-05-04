@@ -36,6 +36,14 @@ class CreateUser extends Migration
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
             ],
+            'phone_number' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+            ],
+            'is_active' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+            ],
             'created_at' => [
                 'type' => 'DATETIME',
                 'null' => true,

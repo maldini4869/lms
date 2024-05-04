@@ -101,3 +101,6 @@ define('EVENT_PRIORITY_HIGH', 10);
 define('ROLE_ADMIN', 1);
 define('ROLE_TEACHER', 2);
 define('ROLE_STUDENT', 3);
+
+define('USER_ACTIVE', 1);
+define('USER_NOT_ACTIVE', 0);
