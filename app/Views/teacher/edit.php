@@ -13,6 +13,8 @@
             <form action="/guru/ubah/<?= $teacher['id']; ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="old_profile_picture" value="<?= $teacher['profile_picture']; ?>">
+                <input type="hidden" name="old_teacher_subjects" value="<?= base64_encode(serialize($teacherSubjects)); ?>">
+                <input type="hidden" name="old_nip" value="<?= $teacher['nip']; ?>">
                 <input type="hidden" name="user_id" value="<?= $teacher['user_id']; ?>">
                 <div class="row">
                     <div class="col-md-6">
@@ -59,13 +61,26 @@
                                 <?= validation_get_error('profile_picture'); ?>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
+                        <div class="form-group mt-3">
                             <label for="phone_number">Nomor HP</label>
                             <input type="text" class="form-control <?= validation_has_error('phone_number') ? 'is-invalid' : ''; ?>" id="phone_number" name="phone_number" value="<?= $teacher['phone_number']; ?>" placeholder="199205142023052008">
                             <div class="invalid-feedback ml-2">
                                 <?= validation_get_error('phone_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="subjects[]">Mata Pelajaran</label>
+                            <select class="selectpicker form-control <?= validation_has_error('subjects[]') ? 'is-invalid' : ''; ?>" id="subjects[]" name="subjects[]" value="<?= old('subjects[]'); ?>" title="Pilih Mapel..." multiple data-live-search="true" data-size="10" data-style="bg-white border-info">
+                                <?php foreach ($subjects as $subject) : ?>
+                                    <option value="<?= $subject['id']; ?>" <?= in_array($subject['id'], array_column($teacherSubjects, 'subject_id')) ? 'selected' : ''; ?> data-content="<span class='badge badge-primary'><?= $subject['name']; ?></span>">
+                                        [<?= $subject['code']; ?>] <?= $subject['name']; ?>
+                                    </option>
+                                <?php endforeach ?>
+                            </select>
+                            <div class="invalid-feedback ml-2">
+                                <?= validation_get_error('subjects[]'); ?>
                             </div>
                         </div>
                     </div>

@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Models\SubjectModel;
 use App\Models\TeacherModel;
+use App\Models\TeacherSubjectModel;
 use App\Models\UserModel;
 
 class Teacher extends BaseController
@@ -10,11 +12,15 @@ class Teacher extends BaseController
 
     protected $userModel;
     protected $teacherModel;
+    protected $subjectModel;
+    protected $teacherSubjectModel;
 
     public function __construct()
     {
         $this->userModel = new UserModel();
         $this->teacherModel = new TeacherModel();
+        $this->subjectModel = new SubjectModel();
+        $this->teacherSubjectModel = new TeacherSubjectModel();
     }
 
     public function index()
@@ -22,7 +28,7 @@ class Teacher extends BaseController
         $teachers = $this->teacherModel->select('teacher.id as id, teacher.user_id as user_id, user.email as email, user.full_name as full_name, teacher.nip as nip, user.is_active as is_active')->join('user', 'user.id = teacher.user_id')->orderBy('teacher.id', 'asc')->findAll();
 
         $data = [
-            'title' => 'LSM - Guru',
+            'title' => 'LMS - Guru',
             'teachers' => $teachers
         ];
         return view('teacher/list', $data);
@@ -133,14 +139,26 @@ class Teacher extends BaseController
     public function edit($id)
     {
         if (!$this->request->is('post')) {
-            $teacher = $this->teacherModel->select('teacher.id as id, teacher.user_id as user_id, user.email as email, user.full_name as full_name, teacher.nip as nip, user.profile_picture as profile_picture, user.phone_number as phone_number, user.is_active as is_active')->join('user', 'user.id = teacher.user_id')->where('teacher.id', $id)->orderBy('teacher.id', 'asc')->first();
+            $teacher = $this->teacherModel->getTeacher($id);
+            $subjects = $this->subjectModel->findAll();
+            $teacherSubjects = $this->teacherSubjectModel->getTeacherSubject($id);
 
             $data = [
                 'title' => 'LMS - Ubah Guru',
                 'teacher' => $teacher,
+                'subjects' => $subjects,
+                'teacherSubjects' => $teacherSubjects,
             ];
 
             return view('teacher/edit', $data);
+        }
+
+        $nip = $this->request->getVar('nip');
+        $oldNip = $this->request->getVar('old_nip');
+        if ($oldNip == $nip) {
+            $nipRules = 'required|max_length[255]';
+        } else {
+            $nipRules = 'required|max_length[255]|is_unique[teacher.nip]';
         }
 
         $rules = [
@@ -152,7 +170,7 @@ class Teacher extends BaseController
                 ]
             ],
             'nip'    => [
-                'rules' => 'required|max_length[255]|is_unique[teacher.nip]',
+                'rules' => $nipRules,
                 'errors' => [
                     'required' => 'NIP harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',
@@ -195,6 +213,15 @@ class Teacher extends BaseController
             if ($input['old_profile_picture'] != 'undraw_profile.svg') {
                 unlink('img/profile/' . $input['old_profile_picture']);
             }
+        }
+
+        // Check teacher subject relation
+        $subjects = $this->request->getVar('subjects[]');
+        $teacherSubjects = $this->teacherSubjectModel->where('subject_id', $subjects)->findAll();
+        $oldTeacherSubjects = unserialize(base64_decode($this->request->getVar('old_teacher_subjects')));
+
+        if (!empty($teacherSubjects)) {
+            $this->teacherSubjectModel->delete(array_column($oldTeacherSubjects, 'id'));
         }
 
         $userData = [

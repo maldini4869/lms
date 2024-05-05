@@ -22,7 +22,7 @@ class Student extends BaseController
         $students = $this->studentModel->select('student.id as id, student.user_id as user_id, user.email as email, user.full_name as full_name, student.nisn as nisn, user.is_active as is_active')->join('user', 'user.id = student.user_id')->orderBy('student.id', 'asc')->findAll();
 
         $data = [
-            'title' => 'LSM - Siswa',
+            'title' => 'LMS - Siswa',
             'students' => $students
         ];
         return view('student/list', $data);

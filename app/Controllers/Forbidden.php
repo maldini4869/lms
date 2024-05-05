@@ -7,7 +7,7 @@ class Forbidden extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'LSM - Forbidden'
+            'title' => 'LMS - Forbidden'
         ];
         return view('403', $data);
     }

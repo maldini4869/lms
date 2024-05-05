@@ -52,7 +52,7 @@ class Schedule extends BaseController
         }
 
         $data = [
-            'title' => 'LSM - Jadwal Mapel',
+            'title' => 'LMS - Jadwal Mapel',
             'subTitle' => $subTitle,
             'schedules' => $schedules,
             'schedulesMap' => $schedulesMap,
@@ -68,7 +68,7 @@ class Schedule extends BaseController
             $classes = $this->classModel->findAll();
 
             $data = [
-                'title' => 'LSM - Tambah Jadwal Mapel',
+                'title' => 'LMS - Tambah Jadwal Mapel',
                 'teacherSubjects' => $teacherSubjects,
                 'classes' => $classes
             ];

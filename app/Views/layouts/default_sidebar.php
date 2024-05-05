@@ -7,7 +7,7 @@
             <i class="fas fa-laugh-wink"></i>
         </div>
         <div class="sidebar-brand-text mx-3">
-            LSM
+            LMS
             <?php if (session('user_role_id') == 1) : ?>
                 Admin
             <?php elseif (session('user_role_id') == 2) : ?>
