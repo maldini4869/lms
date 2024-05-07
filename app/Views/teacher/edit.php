@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" class="form-control <?= validation_has_error('email') ? 'is-invalid' : ''; ?>" id="email" name="email" value="<?= $teacher['email']; ?>" placeholder="name@example.com" readonly>
@@ -46,9 +46,19 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="phone_number">Nomor HP</label>
+                            <input type="text" class="form-control <?= validation_has_error('phone_number') ? 'is-invalid' : ''; ?>" id="phone_number" name="phone_number" value="<?= $teacher['phone_number']; ?>" placeholder="199205142023052008">
+                            <div class="invalid-feedback ml-2">
+                                <?= validation_get_error('phone_number'); ?>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="row mt-3">
+                <div class="row mt-2">
                     <div class="col-md-2">
                         <img src="/img/profile/<?= $teacher['profile_picture']; ?>" class="img-thumbnail img-preview">
                     </div>
@@ -61,18 +71,11 @@
                                 <?= validation_get_error('profile_picture'); ?>
                             </div>
                         </div>
-                        <div class="form-group mt-3">
-                            <label for="phone_number">Nomor HP</label>
-                            <input type="text" class="form-control <?= validation_has_error('phone_number') ? 'is-invalid' : ''; ?>" id="phone_number" name="phone_number" value="<?= $teacher['phone_number']; ?>" placeholder="199205142023052008">
-                            <div class="invalid-feedback ml-2">
-                                <?= validation_get_error('phone_number'); ?>
-                            </div>
-                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="subjects[]">Mata Pelajaran</label>
-                            <select class="selectpicker form-control <?= validation_has_error('subjects[]') ? 'is-invalid' : ''; ?>" id="subjects[]" name="subjects[]" value="<?= old('subjects[]'); ?>" title="Pilih Mapel..." multiple data-live-search="true" data-size="10" data-style="bg-white border-info">
+                            <select class="selectpicker form-control <?= validation_has_error('subjects[]') ? 'is-invalid' : ''; ?>" id="subjects[]" name="subjects[]" value="<?= old('subjects[]'); ?>" title="Pilih Mapel..." multiple data-live-search="true" data-size="10" data-style="border-info">
                                 <?php foreach ($subjects as $subject) : ?>
                                     <option value="<?= $subject['id']; ?>" <?= in_array($subject['id'], array_column($teacherSubjects, 'subject_id')) ? 'selected' : ''; ?> data-content="<span class='badge badge-primary'><?= $subject['name']; ?></span>">
                                         [<?= $subject['code']; ?>] <?= $subject['name']; ?>

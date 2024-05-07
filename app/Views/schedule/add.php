@@ -21,7 +21,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="class_id">Kelas</label>
-                            <select class="selectpicker form-control <?= validation_has_error('class_id') ? 'is-invalid' : ''; ?>" id="class_id" name="class_id" value="<?= old('class_id'); ?>" title="Pilih Kelas..." data-live-search="true" data-size="10">
+                            <select class="selectpicker form-control <?= validation_has_error('class_id') ? 'is-invalid' : ''; ?>" id="class_id" name="class_id" value="<?= old('class_id'); ?>" title="Pilih Kelas..." data-live-search="true" data-size="10" data-style="border-info">
                                 <?php foreach ($classes as $class) : ?>
                                     <option value="<?= $class['id']; ?>"><?= $class['code']; ?></option>
                                 <?php endforeach ?>
@@ -34,7 +34,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="teacher_subject_id">Pilih Mapel - Guru</label>
-                            <select class="selectpicker form-control <?= validation_has_error('teacher_subject_id') ? 'is-invalid' : ''; ?>" id="teacher_subject_id" name="teacher_subject_id" value="<?= old('teacher_subject_id'); ?>" title="Pilih Mapel - Guru..." data-live-search="true" data-size="10">
+                            <select class="selectpicker form-control <?= validation_has_error('teacher_subject_id') ? 'is-invalid' : ''; ?>" id="teacher_subject_id" name="teacher_subject_id" value="<?= old('teacher_subject_id'); ?>" title="Pilih Mapel - Guru..." data-live-search="true" data-size="10" data-style="border-info">
                                 <?php foreach ($teacherSubjects as $teacherSubject) : ?>
                                     <option value="<?= $teacherSubject['id']; ?>"><?= $teacherSubject['subject_name'] . ' - ' . $teacherSubject['teacher_name']; ?></option>
                                 <?php endforeach ?>
@@ -48,21 +48,21 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="semester">Semester</label>
-                            <select class="selectpicker form-control <?= validation_has_error('semester') ? 'is-invalid' : ''; ?>" id="semester" name="semester" value="<?= old('semester'); ?>" title="Pilih Hari..." data-size="10">
-                                <?php for ($i = 1; $i <= 100; $i++) :  ?>
-                                    <option value="<?= $i; ?>"><?= $i; ?></option>
-                                <?php endfor ?>
+                            <label for="semester_id">Semester</label>
+                            <select class="selectpicker form-control <?= validation_has_error('semester_id') ? 'is-invalid' : ''; ?>" id="semester_id" name="semester_id" value="<?= old('semester_id'); ?>" title="Pilih Semester..." data-size="10" data-style="border-info">
+                                <?php foreach ($semesters as $semester) : ?>
+                                    <option value="<?= $semester['id']; ?>"> <?= $semester['semester']; ?> </option>
+                                <?php endforeach ?>
                             </select>
                             <div class="invalid-feedback ml-2">
-                                <?= validation_get_error('semester'); ?>
+                                <?= validation_get_error('semester_id'); ?>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="day">Hari</label>
-                            <select class="selectpicker form-control <?= validation_has_error('day') ? 'is-invalid' : ''; ?>" id="day" name="day" value="<?= old('day'); ?>" title="Pilih Hari..." data-size="10">
+                            <select class="selectpicker form-control <?= validation_has_error('day') ? 'is-invalid' : ''; ?>" id="day" name="day" value="<?= old('day'); ?>" title="Pilih Hari..." data-size="10" data-style="border-info">
                                 <option value="1">Senin</option>
                                 <option value="2">Selasa</option>
                                 <option value="3">Rabu</option>
@@ -77,7 +77,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="start_period">Periode Mulai</label>
-                            <select class="selectpicker form-control <?= validation_has_error('start_period') ? 'is-invalid' : ''; ?>" id="start_period" name="start_period" value="<?= old('start_period'); ?>" title="Pilih Periode Mulai..." data-size="10">
+                            <select class="selectpicker form-control <?= validation_has_error('start_period') ? 'is-invalid' : ''; ?>" id="start_period" name="start_period" value="<?= old('start_period'); ?>" title="Pilih Periode Mulai..." data-size="10" data-style="border-info">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -96,7 +96,7 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="end_period">Periode Selesai</label>
-                            <select class="selectpicker form-control <?= validation_has_error('end_period') ? 'is-invalid' : ''; ?>" id="end_period" name="end_period" value="<?= old('end_period'); ?>" title="Pilih Periode Selesai..." data-size="10">
+                            <select class="selectpicker form-control <?= validation_has_error('end_period') ? 'is-invalid' : ''; ?>" id="end_period" name="end_period" value="<?= old('end_period'); ?>" title="Pilih Periode Selesai..." data-size="10" data-style="border-info">
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>

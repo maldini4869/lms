@@ -14,5 +14,6 @@ class DataSeeder extends \CodeIgniter\Database\Seeder
         $this->call('TeacherSubjectSeeder');
         $this->call('ClassSeeder');
         $this->call('StudentSeeder');
+        $this->call('SemesterSeeder');
     }
 }

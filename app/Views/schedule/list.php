@@ -31,18 +31,18 @@
             <form action="/jadwal-mapel" method="get">
                 <div class="row">
                     <div class="col-md-5">
-                        <select class="selectpicker form-control" id="class_id" name="class_id" data-live-search="true" data-size="10" title="Pilih Kelas...">
+                        <select class="selectpicker form-control" data-style="border-info" id="class_id" name="class_id" data-live-search="true" data-size="10" title="Pilih Kelas...">
                             <?php foreach ($classes as $class) : ?>
-                                <option value="<?= $class['id']; ?>"><?= $class['code']; ?></option>
+                                <option value="<?= $class['id']; ?>" <?= ($class['id'] == $selectedClassId) ? 'selected' : ''; ?>> <?= $class['code']; ?> </option>
                             <?php endforeach ?>
                         </select>
                     </div>
 
                     <div class="col-md-5">
-                        <select class="selectpicker form-control" id="semester" name="semester" data-size="10" title="Pilih Semester...">
-                            <?php for ($i = 1; $i <= 100; $i++) :  ?>
-                                <option value="<?= $i; ?>"><?= $i; ?></option>
-                            <?php endfor ?>
+                        <select class="selectpicker form-control" data-style="border-info" id="semester_id" name="semester_id" data-size="10" title="Pilih Semester...">
+                            <?php foreach ($semesters as $semester) : ?>
+                                <option value="<?= $semester['id']; ?>" <?= ($semester['id'] == $selectedSemesterId) ? 'selected' : ''; ?>> <?= $semester['semester']; ?> </option>
+                            <?php endforeach ?>
                         </select>
                     </div>
 

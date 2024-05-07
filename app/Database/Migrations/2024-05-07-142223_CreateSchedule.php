@@ -22,7 +22,7 @@ class CreateSchedule extends Migration
             'class_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
-                'unsigned'       => true,
+                'unsigned'   => true,
             ],
             'teacher_id' => [
                 'type'       => 'INT',
@@ -32,11 +32,12 @@ class CreateSchedule extends Migration
             'teacher_subject_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
-                'unsigned'       => true,
+                'unsigned'   => true,
             ],
-            'semester' => [
+            'semester_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
+                'unsigned'   => true,
             ],
             'day' => [
                 'type'       => 'INT',
@@ -65,6 +66,7 @@ class CreateSchedule extends Migration
         $this->forge->addForeignKey('class_id', 'class', 'id');
         $this->forge->addForeignKey('teacher_id', 'teacher', 'id');
         $this->forge->addForeignKey('teacher_subject_id', 'teacher_subject', 'id');
+        $this->forge->addForeignKey('semester_id', 'semester', 'id');
         $this->forge->createTable('schedule');
     }
 

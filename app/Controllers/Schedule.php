@@ -4,16 +4,18 @@ namespace App\Controllers;
 
 use App\Models\ClassModel;
 use App\Models\ScheduleModel;
+use App\Models\SemesterModel;
 use App\Models\TeacherSubjectModel;
 
 class Schedule extends BaseController
 {
     protected $teacherSubjectModel;
     protected $classModel;
+    protected $semesterModel;
     protected $scheduleModel;
 
     protected $classId;
-    protected $semester;
+    protected $semesterId;
     protected $day;
     protected $startPeriod;
     protected $endPeriod;
@@ -23,6 +25,7 @@ class Schedule extends BaseController
     {
         $this->teacherSubjectModel = new TeacherSubjectModel();
         $this->classModel = new ClassModel();
+        $this->semesterModel = new SemesterModel();
         $this->scheduleModel = new ScheduleModel();
     }
 
@@ -30,10 +33,12 @@ class Schedule extends BaseController
     {
         $days = [1, 2, 3, 4, 5];
         $classId = $this->request->getVar('class_id');
-        $semester = $this->request->getVar('semester');
-        $schedules = $this->scheduleModel->getSchedules($classId, $semester);
+        $semesterId = $this->request->getVar('semester_id');
+        $schedules = $this->scheduleModel->getSchedules($classId, $semesterId);
         $classes = $this->classModel->findAll();
+        $semesters = $this->semesterModel->findAll();
         $class = $this->classModel->where('id', $classId)->first();
+        $semester = $this->semesterModel->where('id', $semesterId)->first();
 
         $schedulesMap = [];
         foreach ($days as $day) {
@@ -48,7 +53,7 @@ class Schedule extends BaseController
 
         $subTitle = '';
         if ($class) {
-            $subTitle = ' | ' . $class['code'] . ' | Semester ' . $semester;
+            $subTitle = ' | ' . $class['code'] . ' | Semester ' . $semester['semester'];
         }
 
         $data = [
@@ -57,6 +62,9 @@ class Schedule extends BaseController
             'schedules' => $schedules,
             'schedulesMap' => $schedulesMap,
             'classes' => $classes,
+            'semesters' => $semesters,
+            'selectedClassId' => $classId,
+            'selectedSemesterId' => $semesterId
         ];
         return view('schedule/list', $data);
     }
@@ -66,42 +74,41 @@ class Schedule extends BaseController
         if (!$this->request->is('post')) {
             $teacherSubjects = $this->teacherSubjectModel->getTeacherSubject();
             $classes = $this->classModel->findAll();
+            $semesters = $this->semesterModel->findAll();
 
             $data = [
                 'title' => 'LMS - Tambah Jadwal Mapel',
                 'teacherSubjects' => $teacherSubjects,
-                'classes' => $classes
+                'classes' => $classes,
+                'semesters' => $semesters,
             ];
 
             return view('schedule/add', $data);
         }
 
         $this->classId = $this->request->getVar('class_id');
-        $this->semester = $this->request->getVar('semester');
+        $this->semesterId = $this->request->getVar('semester_id');
         $this->day = $this->request->getVar('day');
         $this->startPeriod = $this->request->getVar('start_period');
         $this->endPeriod = $this->request->getVar('end_period');
 
         $rules = [
             'class_id'    => [
-                'rules' => 'required|max_length[255]',
+                'rules' => 'required',
                 'errors' => [
                     'required' => 'Kelas harus dipilih',
-                    'max_length' => 'Jumlah karakter melebihi batas',
                 ]
             ],
             'teacher_subject_id'    => [
-                'rules' => 'required|max_length[255]',
+                'rules' => 'required',
                 'errors' => [
                     'required' => 'Mapel - Guru harus dipilih',
-                    'max_length' => 'Jumlah karakter melebihi batas',
                 ]
             ],
-            'semester' => [
-                'rules' => 'required|max_length[255]',
+            'semester_id' => [
+                'rules' => 'required',
                 'errors' => [
                     'required' => 'Semester harus dipilih',
-                    'max_length' => 'Jumlah karakter melebihi batas',
                 ]
             ],
             'day' => [
@@ -137,12 +144,12 @@ class Schedule extends BaseController
         $this->teacherId = $teacherSubject['teacher_id'];
         $input['teacher_id'] = $teacherSubject['teacher_id'];
 
-        $input['code'] = 'SCH-' . $this->semester . $this->classId . $this->day . $input['teacher_subject_id'] . $this->startPeriod . $this->endPeriod;
+        $input['code'] = 'SCH-' . $this->semesterId . $this->classId . $this->day . $input['teacher_subject_id'] . $this->startPeriod . $this->endPeriod;
 
         // Check if there are overlapping schedules
         $overlappingSchedules = $this->_rulePeriod();
         if (!empty($overlappingSchedules)) {
-            session()->setFlashdata('failed', 'Jadwal untuk kelas, mapel, hari, dan periode tersebut sudah dibuat');
+            session()->setFlashdata('failed', 'Jadwal untuk kelas, mapel, hari, dan periode tersebut sudah ada');
             return redirect()->to('/jadwal-mapel/tambah');
         }
 
@@ -159,7 +166,7 @@ class Schedule extends BaseController
     public function _rulePeriod()
     {
         $schedules = $this->scheduleModel
-            ->where('semester', $this->semester)
+            ->where('semester_id', $this->semesterId)
             ->where('day', $this->day)
             ->where('teacher_id', $this->teacherId)
             ->where('start_period <=', $this->endPeriod)
