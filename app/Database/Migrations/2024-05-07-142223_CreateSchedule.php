@@ -63,15 +63,15 @@ class CreateSchedule extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('code');
-        $this->forge->addForeignKey('class_id', 'class', 'id');
-        $this->forge->addForeignKey('teacher_id', 'teacher', 'id');
-        $this->forge->addForeignKey('teacher_subject_id', 'teacher_subject', 'id');
-        $this->forge->addForeignKey('semester_id', 'semester', 'id');
-        $this->forge->createTable('schedule');
+        $this->forge->addForeignKey('class_id', 'classes', 'id');
+        $this->forge->addForeignKey('teacher_id', 'teachers', 'id');
+        $this->forge->addForeignKey('teacher_subject_id', 'teachers_subjects', 'id');
+        $this->forge->addForeignKey('semester_id', 'semesters', 'id');
+        $this->forge->createTable('schedules');
     }
 
     public function down()
     {
-        $this->forge->dropTable('schedule');
+        $this->forge->dropTable('schedules');
     }
 }

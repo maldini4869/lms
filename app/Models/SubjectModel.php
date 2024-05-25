@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class SubjectModel extends Model
+class SubjectModel extends BaseModel
 {
-    protected $table      = 'subject';
+    protected $table      = 'subjects';
     protected $primaryKey = 'id';
     protected $useTimestamps = true;
 }

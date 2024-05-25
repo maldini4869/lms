@@ -31,12 +31,12 @@ class CreateAdmin extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'user', 'id');
-        $this->forge->createTable('admin');
+        $this->forge->addForeignKey('user_id', 'users', 'id');
+        $this->forge->createTable('admins');
     }
 
     public function down()
     {
-        $this->forge->dropTable('admin');
+        $this->forge->dropTable('admins');
     }
 }

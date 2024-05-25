@@ -8,7 +8,7 @@
     <h1 class="h3 mb-4 text-gray-800">Tambah Siswa</h1>
 
     <!-- Default Card Example -->
-    <div class="card mb-4">
+    <div class="card shadow mb-4">
         <div class="card-body">
             <form action="/siswa/tambah" method="post" enctype="multipart/form-data">
                 <div class="row">

@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\SiteSettingModel;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;

@@ -43,11 +43,11 @@ class CreateClass extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('code');
-        $this->forge->createTable('class');
+        $this->forge->createTable('classes');
     }
 
     public function down()
     {
-        $this->forge->dropTable('class');
+        $this->forge->dropTable('classes');
     }
 }

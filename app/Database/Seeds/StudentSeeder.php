@@ -18,6 +18,6 @@ class StudentSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('student')->insert($data);
+        $this->db->table('students')->insert($data);
     }
 }

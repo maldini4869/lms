@@ -5,29 +5,26 @@ namespace App\Database\Seeds;
 use CodeIgniter\Database\Seeder;
 use CodeIgniter\I18n\Time;
 
-class RoleSeeder extends Seeder
+class SiteSettingSeeder extends Seeder
 {
     public function run()
     {
         $data = [
             [
-                'name' => 'Admin',
+                'slug' => 'CURRENT_SEMESTER',
+                'value' => '1',
                 'created_at'    => Time::now(),
                 'updated_at'    => Time::now(),
             ],
             [
-                'name' => 'Guru',
-                'created_at'    => Time::now(),
-                'updated_at'    => Time::now(),
-            ],
-            [
-                'name' => 'Siswa',
+                'slug' => 'TOTAL_SESSION',
+                'value' => '20',
                 'created_at'    => Time::now(),
                 'updated_at'    => Time::now(),
             ],
         ];
 
         // Using Query Builder
-        $this->db->table('roles')->insertBatch($data);
+        $this->db->table('site_settings')->insertBatch($data);
     }
 }

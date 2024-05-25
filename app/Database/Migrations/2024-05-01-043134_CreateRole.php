@@ -30,11 +30,11 @@ class CreateRole extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->createTable('role');
+        $this->forge->createTable('roles');
     }
 
     public function down()
     {
-        $this->forge->dropTable('role');
+        $this->forge->dropTable('roles');
     }
 }

@@ -35,11 +35,11 @@ class CreateSubject extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('code');
-        $this->forge->createTable('subject');
+        $this->forge->createTable('subjects');
     }
 
     public function down()
     {
-        $this->forge->dropTable('subject');
+        $this->forge->dropTable('subjects');
     }
 }

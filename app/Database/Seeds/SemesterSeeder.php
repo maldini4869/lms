@@ -31,6 +31,6 @@ class SemesterSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('semester')->insertBatch($data);
+        $this->db->table('semesters')->insertBatch($data);
     }
 }

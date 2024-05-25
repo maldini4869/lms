@@ -35,13 +35,13 @@ class CreateTeacher extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'user', 'id');
+        $this->forge->addForeignKey('user_id', 'users', 'id');
         $this->forge->addUniqueKey('nip');
-        $this->forge->createTable('teacher');
+        $this->forge->createTable('teachers');
     }
 
     public function down()
     {
-        $this->forge->dropTable('teacher');
+        $this->forge->dropTable('teachers');
     }
 }

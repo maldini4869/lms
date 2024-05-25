@@ -35,11 +35,11 @@ class CreateSemester extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('semester');
-        $this->forge->createTable('semester');
+        $this->forge->createTable('semesters');
     }
 
     public function down()
     {
-        $this->forge->dropTable('semester');
+        $this->forge->dropTable('semesters');
     }
 }

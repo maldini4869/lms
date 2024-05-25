@@ -70,7 +70,14 @@ class Auth extends BaseController
                     'logged_in'     => TRUE
                 ];
                 $this->session->set($sessionData);
-                return redirect()->to('/dashboard');
+
+                if ($user['role_id'] == ROLE_ADMIN) {
+                    return redirect()->to('/dashboard/admin');
+                } elseif ($user['role_id'] == ROLE_TEACHER) {
+                    return redirect()->to('/dashboard/guru');
+                } elseif ($user['role_id'] == ROLE_STUDENT) {
+                    return redirect()->to('/dashboard/siswa');
+                }
             } else {
                 $this->session->setFlashdata('message', 'Email atau Password Salah!');
                 return redirect()->to('/auth/login');

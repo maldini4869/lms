@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateUser extends Migration
+class CreateSession extends Migration
 {
     public function up()
     {
@@ -15,34 +15,32 @@ class CreateUser extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'email' => [
+            'code' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
             ],
-            'password' => [
+            'description' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
+                'null'       => true
             ],
-            'full_name' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-            ],
-            'role_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true
-            ],
-            'profile_picture' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-            ],
-            'phone_number' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-            ],
-            'is_active' => [
+            'schedule_id' => [
                 'type'       => 'INT',
                 'constraint' => 11,
+                'unsigned'   => true,
+            ],
+            'week' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+            ],
+            'date' => [
+                'type'       => 'DATE',
+                'null'       => true,
+            ],
+            'banner' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -55,13 +53,13 @@ class CreateUser extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('role_id', 'roles', 'id');
-        $this->forge->addUniqueKey('email');
-        $this->forge->createTable('users');
+        $this->forge->addUniqueKey('code');
+        $this->forge->addForeignKey('schedule_id', 'schedules', 'id');
+        $this->forge->createTable('sessions');
     }
 
     public function down()
     {
-        $this->forge->dropTable('users');
+        $this->forge->dropTable('sessions');
     }
 }

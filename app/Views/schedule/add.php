@@ -14,13 +14,14 @@
     <h1 class="h3 mb-4 text-gray-800">Tambah Jadwal</h1>
 
     <!-- Default Card Example -->
-    <div class="card mb-4">
+    <div class="card shadow mb-4">
         <div class="card-body">
             <form action="/jadwal-mapel/tambah" method="post">
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="class_id">Kelas</label>
+
                             <select class="selectpicker form-control <?= validation_has_error('class_id') ? 'is-invalid' : ''; ?>" id="class_id" name="class_id" value="<?= old('class_id'); ?>" title="Pilih Kelas..." data-live-search="true" data-size="10" data-style="border-info">
                                 <?php foreach ($classes as $class) : ?>
                                     <option value="<?= $class['id']; ?>"><?= $class['code']; ?></option>

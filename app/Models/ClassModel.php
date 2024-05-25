@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class ClassModel extends Model
+class ClassModel extends BaseModel
 {
-    protected $table      = 'class';
+    protected $table      = 'classes';
     protected $primaryKey = 'id';
     protected $useTimestamps = true;
 }

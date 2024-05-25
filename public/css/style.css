@@ -1,0 +1,5 @@
+.one-line-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Optional: Adds ellipsis (...) if text overflows */
+}

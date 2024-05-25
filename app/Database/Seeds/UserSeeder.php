@@ -46,6 +46,6 @@ class UserSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('user')->insertBatch($data);
+        $this->db->table('users')->insertBatch($data);
     }
 }

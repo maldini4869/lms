@@ -121,6 +121,6 @@ class SubjectSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('subject')->insertBatch($data);
+        $this->db->table('subjects')->insertBatch($data);
     }
 }

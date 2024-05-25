@@ -16,6 +16,6 @@ class AdminSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('admin')->insert($data);
+        $this->db->table('admins')->insert($data);
     }
 }

@@ -2,37 +2,42 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class ScheduleModel extends Model
+class ScheduleModel extends BaseModel
 {
-    protected $table      = 'schedule';
+    protected $table      = 'schedules';
     protected $primaryKey = 'id';
     protected $allowedFields = ['code', 'class_id', 'teacher_id', 'teacher_subject_id', 'semester_id', 'day', 'start_period', 'end_period'];
     protected $useTimestamps = true;
 
-    public function getSchedules($classId, $semesterId)
+    public function getSchedules($semesterId, $classId = null, $userTeacherId = null)
     {
         $queryBuilder = $this
             ->select('
-                class.code as class_code,
-                semester.semester as semester,
-                subject.name as subject_name,
-                user.full_name as teacher_name,
-                schedule.day as day,
-                schedule.start_period as start_period,
-                schedule.end_period as end_period,
+                classes.code as class_code,
+                semesters.semester as semester,
+                subjects.name as subject_name,
+                users.full_name as teacher_name,
+                schedules.day as day,
+                schedules.start_period as start_period,
+                schedules.end_period as end_period,
             ')
-            ->join('class', 'class.id = schedule.class_id')
-            ->join('semester', 'semester.id = schedule.semester_id')
-            ->join('teacher_subject', 'teacher_subject.id = schedule.teacher_subject_id')
-            ->join('subject', 'subject.id = teacher_subject.subject_id')
-            ->join('teacher', 'teacher.id = teacher_subject.teacher_id')
-            ->join('user', 'user.id = teacher.user_id')
-            ->where('schedule.class_id', $classId)
-            ->where('schedule.semester_id', $semesterId)
-            ->orderBy('start_period', 'asc');
+            ->join('classes', 'classes.id = schedules.class_id')
+            ->join('semesters', 'semesters.id = schedules.semester_id')
+            ->join('teachers_subjects', 'teachers_subjects.id = schedules.teacher_subject_id')
+            ->join('subjects', 'subjects.id = teachers_subjects.subject_id')
+            ->join('teachers', 'teachers.id = teachers_subjects.teacher_id')
+            ->join('users', 'users.id = teachers.user_id')
+            ->where('schedules.semester_id', $semesterId);
 
-        return $queryBuilder->findAll();
+        if ($classId) {
+            $queryBuilder->where('schedules.class_id', $classId);
+        }
+
+        if ($userTeacherId) {
+            $queryBuilder->where('users.id', $userTeacherId);
+        }
+
+
+        return $queryBuilder->orderBy('start_period', 'asc')->findAll();
     }
 }

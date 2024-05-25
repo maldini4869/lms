@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateTeacherSubject extends Migration
+class SiteSetting extends Migration
 {
     public function up()
     {
@@ -15,15 +15,13 @@ class CreateTeacherSubject extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'teacher_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
+            'slug' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
             ],
-            'subject_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
+            'value' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -36,13 +34,12 @@ class CreateTeacherSubject extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('teacher_id', 'teachers', 'id');
-        $this->forge->addForeignKey('subject_id', 'subjects', 'id');
-        $this->forge->createTable('teachers_subjects');
+        $this->forge->addUniqueKey('slug');
+        $this->forge->createTable('site_settings');
     }
 
     public function down()
     {
-        $this->forge->dropTable('teachers_subjects');
+        $this->forge->dropTable('site_settings');
     }
 }

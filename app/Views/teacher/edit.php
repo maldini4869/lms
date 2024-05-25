@@ -8,12 +8,12 @@
     <h1 class="h3 mb-4 text-gray-800">Ubah Guru</h1>
 
     <!-- Default Card Example -->
-    <div class="card mb-4">
+    <div class="card shadow mb-4">
         <div class="card-body">
             <form action="/guru/ubah/<?= $teacher['id']; ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="old_profile_picture" value="<?= $teacher['profile_picture']; ?>">
-                <input type="hidden" name="old_teacher_subjects" value="<?= base64_encode(serialize($teacherSubjects)); ?>">
+                <input type="hidden" name="old_teacher_subject" value="<?= base64_encode(serialize($teacherSubjects)); ?>">
                 <input type="hidden" name="old_nip" value="<?= $teacher['nip']; ?>">
                 <input type="hidden" name="user_id" value="<?= $teacher['user_id']; ?>">
                 <div class="row">
@@ -74,8 +74,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="subjects[]">Mata Pelajaran</label>
-                            <select class="selectpicker form-control <?= validation_has_error('subjects[]') ? 'is-invalid' : ''; ?>" id="subjects[]" name="subjects[]" value="<?= old('subjects[]'); ?>" title="Pilih Mapel..." multiple data-live-search="true" data-size="10" data-style="border-info">
+                            <label for="subject_id[]">Mata Pelajaran</label>
+                            <select class="selectpicker form-control <?= validation_has_error('subject_id[]') ? 'is-invalid' : ''; ?>" id="subject_id[]" name="subject_id[]" value="<?= old('subject_id[]'); ?>" title="Pilih Mapel..." multiple data-live-search="true" data-size="10" data-style="border-info">
                                 <?php foreach ($subjects as $subject) : ?>
                                     <option value="<?= $subject['id']; ?>" <?= in_array($subject['id'], array_column($teacherSubjects, 'subject_id')) ? 'selected' : ''; ?> data-content="<span class='badge badge-primary'><?= $subject['name']; ?></span>">
                                         [<?= $subject['code']; ?>] <?= $subject['name']; ?>
@@ -83,7 +83,7 @@
                                 <?php endforeach ?>
                             </select>
                             <div class="invalid-feedback ml-2">
-                                <?= validation_get_error('subjects[]'); ?>
+                                <?= validation_get_error('subject_id[]'); ?>
                             </div>
                         </div>
                     </div>

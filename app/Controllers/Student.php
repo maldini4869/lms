@@ -19,7 +19,7 @@ class Student extends BaseController
 
     public function index()
     {
-        $students = $this->studentModel->select('student.id as id, student.user_id as user_id, user.email as email, user.full_name as full_name, student.nisn as nisn, user.is_active as is_active')->join('user', 'user.id = student.user_id')->orderBy('student.id', 'asc')->findAll();
+        $students = $this->studentModel->select('students.id as id, students.user_id as user_id, users.email as email, users.full_name as full_name, students.nisn as nisn, users.is_active as is_active')->join('users', 'users.id = students.user_id')->orderBy('students.id', 'asc')->findAll();
 
         $data = [
             'title' => 'LMS - Siswa',
@@ -47,7 +47,7 @@ class Student extends BaseController
                 ]
             ],
             'email'    => [
-                'rules' => 'required|max_length[255]|valid_email|is_unique[user.email]',
+                'rules' => 'required|max_length[255]|valid_email|is_unique[users.email]',
                 'errors' => [
                     'required' => 'Email harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',
@@ -64,7 +64,7 @@ class Student extends BaseController
                 ]
             ],
             'nisn'    => [
-                'rules' => 'required|max_length[255]|is_unique[student.nisn]',
+                'rules' => 'required|max_length[255]|is_unique[students.nisn]',
                 'errors' => [
                     'required' => 'NIP harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',
@@ -132,7 +132,7 @@ class Student extends BaseController
     public function edit($id)
     {
         if (!$this->request->is('post')) {
-            $student = $this->studentModel->select('student.id as id, student.user_id as user_id, user.email as email, user.full_name as full_name, student.nisn as nisn, user.profile_picture as profile_picture, user.phone_number as phone_number, user.is_active as is_active')->join('user', 'user.id = student.user_id')->where('student.id', $id)->orderBy('student.id', 'asc')->first();
+            $student = $this->studentModel->select('students.id as id, students.user_id as user_id, users.email as email, users.full_name as full_name, students.nisn as nisn, users.profile_picture as profile_picture, users.phone_number as phone_number, users.is_active as is_active')->join('user', 'users.id = students.user_id')->where('students.id', $id)->orderBy('students.id', 'asc')->first();
 
             $data = [
                 'title' => 'LMS - Ubah Siswa',
@@ -151,7 +151,7 @@ class Student extends BaseController
                 ]
             ],
             'nisn'    => [
-                'rules' => 'required|max_length[255]|is_unique[student.nisn]',
+                'rules' => 'required|max_length[255]|is_unique[students.nisn]',
                 'errors' => [
                     'required' => 'NIP harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',

@@ -40,14 +40,14 @@ class CreateStudent extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'user', 'id');
-        $this->forge->addForeignKey('class_id', 'class', 'id');
+        $this->forge->addForeignKey('user_id', 'users', 'id');
+        $this->forge->addForeignKey('class_id', 'classes', 'id');
         $this->forge->addUniqueKey('nisn');
-        $this->forge->createTable('student');
+        $this->forge->createTable('students');
     }
 
     public function down()
     {
-        $this->forge->dropTable('student');
+        $this->forge->dropTable('students');
     }
 }

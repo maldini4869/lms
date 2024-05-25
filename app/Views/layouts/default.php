@@ -24,6 +24,9 @@
     <!-- Custom styles for bootstrap-select -->
     <link href="/css/bootstrap-select.min.css" rel="stylesheet">
 
+    <!-- Custom styles -->
+    <link href="/css/style.css" rel="stylesheet">
+
 </head>
 
 <body id="page-top">
@@ -127,6 +130,9 @@
 
     <!-- Custom period-picker scripts -->
     <script src="/js/period-picker.js"></script>
+
+    <!-- Custom tooltip scripts -->
+    <script src="/js/tooltip.js"></script>
 </body>
 
 </html>

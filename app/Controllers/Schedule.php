@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\ClassModel;
+use App\Models\SessionModel;
 use App\Models\ScheduleModel;
 use App\Models\SemesterModel;
 use App\Models\TeacherSubjectModel;
@@ -13,6 +14,7 @@ class Schedule extends BaseController
     protected $classModel;
     protected $semesterModel;
     protected $scheduleModel;
+    protected $sessionModel;
 
     protected $classId;
     protected $semesterId;
@@ -27,6 +29,7 @@ class Schedule extends BaseController
         $this->classModel = new ClassModel();
         $this->semesterModel = new SemesterModel();
         $this->scheduleModel = new ScheduleModel();
+        $this->sessionModel = new SessionModel();
     }
 
     public function index()
@@ -34,7 +37,7 @@ class Schedule extends BaseController
         $days = [1, 2, 3, 4, 5];
         $classId = $this->request->getVar('class_id');
         $semesterId = $this->request->getVar('semester_id');
-        $schedules = $this->scheduleModel->getSchedules($classId, $semesterId);
+        $schedules = $this->scheduleModel->getSchedules($semesterId, $classId);
         $classes = $this->classModel->findAll();
         $semesters = $this->semesterModel->findAll();
         $class = $this->classModel->where('id', $classId)->first();
@@ -144,16 +147,31 @@ class Schedule extends BaseController
         $this->teacherId = $teacherSubject['teacher_id'];
         $input['teacher_id'] = $teacherSubject['teacher_id'];
 
-        $input['code'] = 'SCH-' . $this->semesterId . $this->classId . $this->day . $input['teacher_subject_id'] . $this->startPeriod . $this->endPeriod;
+        $uniqueCode = $this->semesterId . $this->classId . $this->day . $input['teacher_subject_id'] . $this->startPeriod . $this->endPeriod;
+
+        $input['code'] = 'SCH-' . $uniqueCode;
 
         // Check if there are overlapping schedules
         $overlappingSchedules = $this->_rulePeriod();
         if (!empty($overlappingSchedules)) {
-            session()->setFlashdata('failed', 'Jadwal untuk kelas, mapel, hari, dan periode tersebut sudah ada');
+            session()->setFlashdata('failed', 'Jadwal untuk kelas, hari, semester, dan periode tersebut sudah ada');
             return redirect()->to('/jadwal-mapel/tambah');
         }
 
-        $result = $this->scheduleModel->insert($input, false);
+        $scheduleId = $this->scheduleModel->insert($input, true);
+
+        $totalsession = get_site_settings('TOTAL_SESSION');
+        $sessions = [];
+        for ($i = 1; $i <= (int)$totalsession; $i++) {
+            array_push($sessions, [
+                'code' => 'SS-' . $scheduleId . '-' . $uniqueCode . '-' . $i,
+                'schedule_id' => $scheduleId,
+                'week' => $i
+            ]);
+        }
+
+        $result = $this->sessionModel->insertBatch($sessions);
+
         if ($result) {
             session()->setFlashdata('success', 'Jadwal Berhasil Dibuat!');
         } else {
@@ -168,7 +186,6 @@ class Schedule extends BaseController
         $schedules = $this->scheduleModel
             ->where('semester_id', $this->semesterId)
             ->where('day', $this->day)
-            ->where('teacher_id', $this->teacherId)
             ->where('start_period <=', $this->endPeriod)
             ->where('end_period >=', $this->startPeriod)
             ->findAll();

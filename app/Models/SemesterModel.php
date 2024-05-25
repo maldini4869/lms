@@ -2,11 +2,9 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class SemesterModel extends Model
+class SemesterModel extends BaseModel
 {
-    protected $table      = 'semester';
+    protected $table      = 'semesters';
     protected $primaryKey = 'id';
     protected $allowedFields = ['semester', 'semester_year'];
     protected $useTimestamps = true;

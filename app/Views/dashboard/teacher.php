@@ -1,45 +1,19 @@
 <?php $this->extend('layouts/default'); ?>
 
-<?php $this->section('content'); ?>
+<?= $this->section('content'); ?>
 
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-    <?php if (session()->getFlashdata('success')) : ?>
-        <div class="alert alert-success" role="alert">
-            <?= session()->getFlashdata('success'); ?>
-        </div>
-    <?php elseif (session()->getFlashdata('failed')) : ?>
-        <div class="alert alert-danger" role="alert">
-            <?= session()->getFlashdata('failed'); ?>
-        </div>
-    <?php endif; ?>
-
     <!-- Page Heading -->
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <h1 class="h3 mb-2 text-gray-800">Jadwal Mata Pelajaran <?= $subTitle; ?></h1>
-        </div>
-        <div class="col-md-6">
-            <a class="btn btn-primary float-right" href="/jadwal-mapel/tambah" role="button">Tambah</a>
-        </div>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard Guru - Jadwal Mata Pelajaran</h1>
     </div>
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <form action="/jadwal-mapel" method="get">
+            <form action="/dashboard/guru" method="get">
                 <div class="row">
-                    <div class="col-md-5">
-                        <div class="form-group">
-                            <label for="class_id">Kelas</label>
-                            <select class="selectpicker form-control" data-style="border-info" id="class_id" name="class_id" data-live-search="true" data-size="10" title="Pilih Kelas...">
-                                <?php foreach ($classes as $class) : ?>
-                                    <option value="<?= $class['id']; ?>" <?= ($class['id'] == $selectedClassId) ? 'selected' : ''; ?>> <?= $class['code']; ?> </option>
-                                <?php endforeach ?>
-                            </select>
-                        </div>
-                    </div>
-
                     <div class="col-md-5">
                         <div class="form-group">
                             <label for="semester_id">Semester</label>
@@ -95,9 +69,11 @@
                                         $colspan = $endPeriod - $startPeriod + 1
                                         ?>
                                         <td colspan="<?= $colspan; ?>" style="width: 108px; max-width: 108px">
-                                            <div class="bg-success p-2 rounded text-white text-center one-line-text" data-toggle="tooltip" data-placement="top" title="<?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['teacher_name']; ?>">
-                                                <?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['teacher_name']; ?>
-                                            </div>
+                                            <a href="/pertemuan" class="text-decoration-none">
+                                                <div class="bg-success p-2 rounded text-white text-center one-line-text" data-toggle="tooltip" data-placement="top" title="<?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['class_code']; ?>">
+                                                    <?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['class_code']; ?>
+                                                </div>
+                                            </a>
                                         </td>
                                     <?php else : ?>
                                         <td></td>
@@ -118,4 +94,5 @@
 </div>
 <!-- /.container-fluid -->
 
-<?php $this->endSection('content'); ?>
+
+<?= $this->endSection('content'); ?>

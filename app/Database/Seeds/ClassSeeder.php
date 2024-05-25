@@ -205,6 +205,6 @@ class ClassSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('class')->insertBatch($data);
+        $this->db->table('classes')->insertBatch($data);
     }
 }

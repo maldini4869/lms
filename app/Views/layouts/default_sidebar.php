@@ -23,7 +23,17 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item <?= current_url(true)->getSegment(1) === 'dashboard' ? 'active' : ''; ?>">
-        <a class="nav-link" href="/dashboard">
+        <?php
+        $dashboardUrl = '';
+        if (session('user_role_id') == 1) {
+            $dashboardUrl = '/dashboard/admin';
+        } elseif (session('user_role_id') == 2) {
+            $dashboardUrl = '/dashboard/guru';
+        } elseif (session('user_role_id') == 3) {
+            $dashboardUrl = '/dashboard/siswa';
+        }
+        ?>
+        <a class="nav-link" href="<?= $dashboardUrl; ?>">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>

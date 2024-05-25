@@ -25,7 +25,7 @@ class Teacher extends BaseController
 
     public function index()
     {
-        $teachers = $this->teacherModel->select('teacher.id as id, teacher.user_id as user_id, user.email as email, user.full_name as full_name, teacher.nip as nip, user.is_active as is_active')->join('user', 'user.id = teacher.user_id')->orderBy('teacher.id', 'asc')->findAll();
+        $teachers = $this->teacherModel->select('teachers.id as id, teachers.user_id as user_id, users.email as email, users.full_name as full_name, teachers.nip as nip, users.is_active as is_active')->join('users', 'users.id = teachers.user_id')->orderBy('users.full_name', 'asc')->findAll();
 
         $data = [
             'title' => 'LMS - Guru',
@@ -37,8 +37,11 @@ class Teacher extends BaseController
     public function add()
     {
         if (!$this->request->is('post')) {
+            $subjects = $this->subjectModel->findAll();
+
             $data = [
                 'title' => 'LMS - Tambah Guru',
+                'subjects' => $subjects,
             ];
 
             return view('teacher/add', $data);
@@ -53,7 +56,7 @@ class Teacher extends BaseController
                 ]
             ],
             'email'    => [
-                'rules' => 'required|max_length[255]|valid_email|is_unique[user.email]',
+                'rules' => 'required|max_length[255]|valid_email|is_unique[users.email]',
                 'errors' => [
                     'required' => 'Email harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',
@@ -70,7 +73,7 @@ class Teacher extends BaseController
                 ]
             ],
             'nip'    => [
-                'rules' => 'required|max_length[255]|is_unique[teacher.nip]',
+                'rules' => 'required|max_length[255]|is_unique[teachers.nip]',
                 'errors' => [
                     'required' => 'NIP harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',
@@ -89,6 +92,12 @@ class Teacher extends BaseController
                 'errors' => [
                     'required' => 'Nomor HP harus diisi',
                     'max_length' => 'Jumlah karakter melebihi 18 karakter',
+                ]
+            ],
+            'subject_id[]'    => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Mata Pelajaran harus diisi',
                 ]
             ],
         ];
@@ -125,7 +134,15 @@ class Teacher extends BaseController
             'nip' => $input['nip'],
         ];
 
-        $result = $this->teacherModel->insert($teacherData, false);
+        $teacherId = $this->teacherModel->insert($teacherData, true);
+
+        $subjectIds = $this->request->getVar('subject_id[]');
+        $teacherSubjectData = [];
+        foreach ($subjectIds as $subjectId) {
+            array_push($teacherSubjectData, ['teacher_id' => $teacherId, 'subject_id' => $subjectId]);
+        }
+
+        $result = $this->teacherSubjectModel->insertBatch($teacherSubjectData);
 
         if ($result) {
             session()->setFlashdata('success', 'Guru Berhasil Dibuat!');
@@ -158,7 +175,7 @@ class Teacher extends BaseController
         if ($oldNip == $nip) {
             $nipRules = 'required|max_length[255]';
         } else {
-            $nipRules = 'required|max_length[255]|is_unique[teacher.nip]';
+            $nipRules = 'required|max_length[255]|is_unique[teachers.nip]';
         }
 
         $rules = [
@@ -191,6 +208,12 @@ class Teacher extends BaseController
                     'max_length' => 'Jumlah karakter melebihi 18 karakter',
                 ]
             ],
+            'subject_id[]'    => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => 'Mata Pelajaran harus diisi',
+                ]
+            ],
         ];
 
         $input = $this->request->getPost(array_keys($rules));
@@ -215,15 +238,6 @@ class Teacher extends BaseController
             }
         }
 
-        // Check teacher subject relation
-        $subjects = $this->request->getVar('subjects[]');
-        $teacherSubjects = $this->teacherSubjectModel->where('subject_id', $subjects)->findAll();
-        $oldTeacherSubjects = unserialize(base64_decode($this->request->getVar('old_teacher_subjects')));
-
-        if (!empty($teacherSubjects)) {
-            $this->teacherSubjectModel->delete(array_column($oldTeacherSubjects, 'id'));
-        }
-
         $userData = [
             'id' => $input['user_id'],
             'full_name' => $input['full_name'],
@@ -238,7 +252,31 @@ class Teacher extends BaseController
             'nip' => $input['nip'],
         ];
 
-        $result = $this->teacherModel->save($teacherData, false);
+        $this->teacherModel->save($teacherData);
+
+        $subjectIds = $this->request->getVar('subject_id[]');
+        $oldTeacherSubjects = unserialize(base64_decode($this->request->getVar('old_teacher_subject')));
+
+        $oldTeacherSubjects = array_map(function ($teacherSubject) {
+            return ['teacher_id' => $teacherSubject['teacher_id'], 'subject_id' => $teacherSubject['subject_id']];
+        }, $oldTeacherSubjects);
+
+        $teacherSubjectData = [];
+        foreach ($subjectIds as $subjectId) {
+            array_push($teacherSubjectData, ['teacher_id' => $id, 'subject_id' => $subjectId]);
+        }
+
+        $result = null;
+        if ($oldTeacherSubjects == $teacherSubjectData) {
+            $result = true;
+        } else {
+            $this->teacherSubjectModel
+                ->where('teacher_id', $id)
+                ->delete();
+
+            $result = $this->teacherSubjectModel->insertBatch($teacherSubjectData);
+        }
+
 
         if ($result) {
             session()->setFlashdata('success', 'Guru Berhasil Diubah!');

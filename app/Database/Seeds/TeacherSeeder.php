@@ -17,6 +17,6 @@ class TeacherSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('teacher')->insert($data);
+        $this->db->table('teachers')->insert($data);
     }
 }

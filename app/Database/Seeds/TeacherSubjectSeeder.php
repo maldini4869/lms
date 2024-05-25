@@ -25,6 +25,6 @@ class TeacherSubjectSeeder extends Seeder
         ];
 
         // Using Query Builder
-        $this->db->table('teacher_subject')->insertBatch($data);
+        $this->db->table('teachers_subjects')->insertBatch($data);
     }
 }
