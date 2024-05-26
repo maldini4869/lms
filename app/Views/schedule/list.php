@@ -1,4 +1,4 @@
-<?php $this->extend('layouts/default'); ?>
+<?php $this->extend('layouts/admin'); ?>
 
 <?php $this->section('content'); ?>
 
@@ -95,8 +95,16 @@
                                         $colspan = $endPeriod - $startPeriod + 1
                                         ?>
                                         <td colspan="<?= $colspan; ?>" style="width: 108px; max-width: 108px">
-                                            <div class="bg-success p-2 rounded text-white text-center one-line-text" data-toggle="tooltip" data-placement="top" title="<?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['teacher_name']; ?>">
+                                            <div class="bg-success px-3 py-2 rounded text-white text-center one-line-text d-flex align-items-center justify-content-between" data-toggle="tooltip" data-placement="top" title="<?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['teacher_name']; ?>">
                                                 <?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['teacher_name']; ?>
+
+                                                <form class="d-inline" action="/jadwal-mapel/<?= $scheduleMap[$key]['id'] ?>" method="post">
+                                                    <?= csrf_field(); ?>
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="submit" style="background: initial; border: initial; color: initial;" onclick="return confirm('Menghapus jadwal akan menghapus pertemuan. Apakah anda yakin?')">
+                                                        <i class="far fa-trash-alt" style="color: #c70000;"></i>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     <?php else : ?>

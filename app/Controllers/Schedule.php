@@ -192,4 +192,13 @@ class Schedule extends BaseController
 
         return $schedules;
     }
+
+    public function delete($id)
+    {
+        $this->scheduleModel->delete($id);
+
+        session()->setFlashdata('success', 'Jadwal dan Pertemuan Berhasil Dihapus!');
+
+        return redirect()->to('/jadwal-mapel');
+    }
 }

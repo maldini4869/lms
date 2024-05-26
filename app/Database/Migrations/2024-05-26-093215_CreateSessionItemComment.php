@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateStudent extends Migration
+class CreateSessionItemComment extends Migration
 {
     public function up()
     {
@@ -15,14 +15,19 @@ class CreateStudent extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'user_id' => [
+            'session_item_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
             ],
-            'nisn' => [
+            'comment_text' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
+            ],
+            'user_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -35,13 +40,13 @@ class CreateStudent extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'users', 'id');
-        $this->forge->addUniqueKey('nisn');
-        $this->forge->createTable('students');
+        $this->forge->addForeignKey('session_item_id', 'session_items', 'id', '', 'CASCADE');
+        $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+        $this->forge->createTable('session_item_comments');
     }
 
     public function down()
     {
-        $this->forge->dropTable('students');
+        $this->forge->dropTable('session_item_comments');
     }
 }

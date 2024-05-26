@@ -3,12 +3,7 @@
 <?= $this->section('content'); ?>
 
 <!-- Begin Page Content -->
-<div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard Guru - Jadwal Mata Pelajaran</h1>
-    </div>
+<div class="container">
 
     <div class="card shadow mb-4">
         <div class="card-body">
@@ -69,7 +64,7 @@
                                         $colspan = $endPeriod - $startPeriod + 1
                                         ?>
                                         <td colspan="<?= $colspan; ?>" style="width: 108px; max-width: 108px">
-                                            <a href="/pertemuan" class="text-decoration-none">
+                                            <a href="/pertemuan/<?= $scheduleMap[$key]['id']; ?>" class="text-decoration-none">
                                                 <div class="bg-success p-2 rounded text-white text-center one-line-text" data-toggle="tooltip" data-placement="top" title="<?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['class_code']; ?>">
                                                     <?= $scheduleMap[$key]['subject_name'] . ' - ' . $scheduleMap[$key]['class_code']; ?>
                                                 </div>

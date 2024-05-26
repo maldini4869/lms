@@ -12,7 +12,6 @@ class StudentSeeder extends Seeder
         $data = [
             'user_id' => 3,
             'nisn' => '1823456002',
-            'class_id' => 1,
             'created_at'    => Time::now(),
             'updated_at'    => Time::now(),
         ];

@@ -34,31 +34,52 @@
     <!-- Page Wrapper -->
     <div id="wrapper">
 
-        <?= $this->include('layouts/default_sidebar'); ?>
-
         <div id="content-wrapper" class="d-flex flex-column">
 
             <!-- Main Content -->
-            <div id="content">
+            <div id="content" style="height: 100vh">
 
-                <?= $this->include('layouts/default_topbar'); ?>
+                <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+                    <div class="container">
+                        <a class="navbar-brand" href="#">LMS</a>
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                            <ul class="navbar-nav">
+                                <li class="nav-item active">
+                                    <a class="nav-link" href="/dashboard/guru">Home</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="dropdown">
+                            <div style="cursor: pointer;" id="dorpdownMenuProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-white small" style="width: fit-content;"><?= session('user_full_name'); ?></span>
+                                <img class="img-profile rounded-circle" width="36" src="/img/profile/<?= session('user_profile_picture'); ?>">
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="dorpdownMenuProfile">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
 
-                <!-- Content Wrapper -->
-                <?= $this->renderSection('content'); ?>
-                <!-- End of Content Wrapper -->
+                <div style="margin-top: 80px; padding-bottom: 20px;">
+                    <!-- Content Wrapper -->
+                    <?= $this->renderSection('content'); ?>
+                    <!-- End of Content Wrapper -->
+                </div>
 
             </div>
             <!-- End of Main Content -->
-
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
-                </div>
-            </footer>
-            <!-- End of Footer -->
 
         </div>
 
@@ -109,30 +130,32 @@
     <!-- Bootstrap-select custom scripts -->
     <script src="/js/bootstrap-select.min.js"></script>
 
-
-    <!-- Custom image-preview scripts -->
-    <script>
-        function previewImg() {
-            const profilePicture = document.querySelector('#profile_picture');
-            const profilePictureLabel = document.querySelector('.custom-file-label');
-            const profilePicturePreview = document.querySelector('.img-preview');
-
-            profilePictureLabel.textContent = profilePicture.files[0].name;
-
-            const profilePictureFile = new FileReader();
-            profilePictureFile.readAsDataURL(profilePicture.files[0])
-
-            profilePictureFile.onload = function(e) {
-                profilePicturePreview.src = e.target.result;
-            }
-        }
-    </script>
-
     <!-- Custom period-picker scripts -->
     <script src="/js/period-picker.js"></script>
 
     <!-- Custom tooltip scripts -->
     <script src="/js/tooltip.js"></script>
+
+    <script>
+        function previewFile() {
+            const postAttachment = document.querySelector('#file');
+            const filePreviewContainer = document.querySelector('#file-preview');
+            const postLabel = document.querySelector('#label');
+
+            postLabel.style['display'] = 'none'
+
+            if (postAttachment.files[0]) {
+                filePreviewContainer.innerHTML = `
+                <div class="d-flex align-items-center bg-light p-3 rounded">
+                    <i class="fas fa-file-alt mr-2" style="font-size: 32px"></i>
+                    <h6 class="mb-0">${postAttachment.files[0].name}</h6>
+                </div>
+            `;
+            }
+
+
+        }
+    </script>
 </body>
 
 </html>

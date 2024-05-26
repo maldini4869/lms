@@ -54,7 +54,7 @@ class CreateSession extends Migration
 
         $this->forge->addKey('id', true);
         $this->forge->addUniqueKey('code');
-        $this->forge->addForeignKey('schedule_id', 'schedules', 'id');
+        $this->forge->addForeignKey('schedule_id', 'schedules', 'id', '', 'CASCADE');
         $this->forge->createTable('sessions');
     }
 

@@ -8,4 +8,5 @@ class StudentModel extends BaseModel
     protected $primaryKey = 'id';
     protected $allowedFields = ['user_id', 'full_name', 'nisn'];
     protected $useTimestamps = true;
+    protected $with = 'users';
 }

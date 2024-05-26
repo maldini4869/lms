@@ -1,4 +1,4 @@
-<?php $this->extend('layouts/default'); ?>
+<?php $this->extend('layouts/admin'); ?>
 
 <?= $this->section('content'); ?>
 

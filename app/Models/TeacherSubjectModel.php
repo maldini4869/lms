@@ -8,6 +8,7 @@ class TeacherSubjectModel extends BaseModel
     protected $primaryKey = 'id';
     protected $allowedFields = ['teacher_id', 'subject_id'];
     protected $useTimestamps = true;
+    protected $with = 'subjects';
 
     public function getTeacherSubject($teacherId = null)
     {

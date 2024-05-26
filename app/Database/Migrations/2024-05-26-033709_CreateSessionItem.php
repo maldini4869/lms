@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateStudent extends Migration
+class CreateSessionItem extends Migration
 {
     public function up()
     {
@@ -15,14 +15,28 @@ class CreateStudent extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'user_id' => [
+            'session_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
             ],
-            'nisn' => [
+            'text' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
+            ],
+            'file' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null' => true,
+            ],
+            'type' => [
+                'type'       => 'INT',
+                'constraint' => 11,
+            ],
+            'user_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -35,13 +49,13 @@ class CreateStudent extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('user_id', 'users', 'id');
-        $this->forge->addUniqueKey('nisn');
-        $this->forge->createTable('students');
+        $this->forge->addForeignKey('session_id', 'sessions', 'id', '', 'CASCADE');
+        $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
+        $this->forge->createTable('session_items');
     }
 
     public function down()
     {
-        $this->forge->dropTable('students');
+        $this->forge->dropTable('session_items');
     }
 }

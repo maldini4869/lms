@@ -3,3 +3,33 @@
   overflow: hidden;
   text-overflow: ellipsis; /* Optional: Adds ellipsis (...) if text overflows */
 }
+
+.no-style-link {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.no-style-link h4 {
+  color: #4e73df;
+}
+
+.no-style-link:hover {
+  text-decoration: none !important;
+  background-color: #f2f2f2;
+  color: #858796;
+}
+
+.button-hover {
+  opacity: 0.8;
+  background: initial;
+  border: initial;
+  color: inherit;
+}
+
+.button-hover:hover {
+  opacity: 1;
+}
+
+.session-item-comment-containter {
+  border-radius: 20px 20px;
+}
