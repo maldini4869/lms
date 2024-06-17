@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateSessionStudent extends Migration
+class CreateStudentClass extends Migration
 {
     public function up()
     {
@@ -15,7 +15,12 @@ class CreateSessionStudent extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'session_id' => [
+            'semester_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
+            ],
+            'class_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
@@ -36,13 +41,14 @@ class CreateSessionStudent extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('session_id', 'sessions', 'id', '', 'CASCADE');
+        $this->forge->addForeignKey('semester_id', 'semesters', 'id', '', 'CASCADE');
+        $this->forge->addForeignKey('class_id', 'classes', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('student_id', 'students', 'id', '', 'CASCADE');
-        $this->forge->createTable('sessions_students');
+        $this->forge->createTable('student_classes');
     }
 
     public function down()
     {
-        $this->forge->dropTable('sessions_students');
+        $this->forge->dropTable('student_classes');
     }
 }

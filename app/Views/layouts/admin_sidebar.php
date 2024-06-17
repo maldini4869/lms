@@ -60,6 +60,13 @@
             <span>Siswa</span></a>
     </li>
 
+    <!-- Nav Item - Kelas -->
+    <li class="nav-item <?= current_url(true)->getSegment(1) === 'siswa' ? 'active' : ''; ?>">
+        <a class="nav-link" href="/kelas">
+            <i class="fas fa-chalkboard"></i>
+            <span>Kelas</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 

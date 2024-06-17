@@ -34,6 +34,11 @@ $routes->post('/siswa/tambah', 'Student::add', ['filter' => "auth:$roleAdmin"]);
 $routes->get('/siswa/ubah/(:num)', 'Student::edit/$1', ['filter' => "auth:$roleAdmin"]);
 $routes->post('/siswa/ubah/(:num)', 'Student::edit/$1', ['filter' => "auth:$roleAdmin"]);
 
+$routes->get('/kelas', 'StudentClass::index', ['filter' => "auth:$roleAdmin"]);
+$routes->get('/kelas/(:num)/semester/(:num)', 'StudentClass::detail/$1/$2', ['filter' => "auth:$roleAdmin"]);
+$routes->post('/kelas/siswa/tambah', 'StudentClass::addStudentClass', ['filter' => "auth:$roleAdmin"]);
+$routes->delete('/kelas/siswa/(:num)', 'StudentClass::deleteStudentClass/$1', ['filter' => "auth:$roleAdmin"]);
+
 $routes->get('/jadwal-mapel', 'Schedule::index', ['filter' => "auth:$roleAdmin"]);
 $routes->get('/jadwal-mapel/tambah', 'Schedule::add', ['filter' => "auth:$roleAdmin"]);
 $routes->post('/jadwal-mapel/tambah', 'Schedule::add', ['filter' => "auth:$roleAdmin"]);
