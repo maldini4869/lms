@@ -35,28 +35,37 @@ class Schedule extends BaseController
     public function index()
     {
         $days = [1, 2, 3, 4, 5];
-        $classId = $this->request->getVar('class_id');
-        $semesterId = $this->request->getVar('semester_id');
-        $schedules = $this->scheduleModel->getSchedules($semesterId, $classId);
+        $currentSemester = get_site_settings('CURRENT_SEMESTER');
+        $semesterIdParam = $this->request->getVar('semester_id');
+
+        if ($semesterIdParam) {
+            $semesterId = $semesterIdParam;
+        } else {
+            $semesterId = $currentSemester;
+        }
+
+        $schedules = $this->scheduleModel->getSchedules($semesterId);
         $classes = $this->classModel->findAll();
         $semesters = $this->semesterModel->findAll();
-        $class = $this->classModel->where('id', $classId)->first();
         $semester = $this->semesterModel->where('id', $semesterId)->first();
 
         $schedulesMap = [];
-        foreach ($days as $day) {
-            $schedulesMap[$day] = [];
+        foreach ($classes as $class) {
+            foreach ($days as $day) {
+                $classCode = $class['code'];
+                $schedulesMap[$classCode][$day] = [];
 
-            foreach ($schedules as $schedule) {
-                if ($schedule['day'] == $day) {
-                    $schedulesMap[$day][] = $schedule;
+                foreach ($schedules as $schedule) {
+                    if ($schedule['day'] == $day && $schedule['class_id'] == $class['id']) {
+                        $schedulesMap[$classCode][$day][] = $schedule;
+                    }
                 }
             }
         }
 
         $subTitle = '';
-        if ($class) {
-            $subTitle = ' | ' . $class['code'] . ' | Semester ' . $semester['semester'];
+        if ($semester) {
+            $subTitle = "Semester $semester[semester]";
         }
 
         $data = [
@@ -66,7 +75,6 @@ class Schedule extends BaseController
             'schedulesMap' => $schedulesMap,
             'classes' => $classes,
             'semesters' => $semesters,
-            'selectedClassId' => $classId,
             'selectedSemesterId' => $semesterId
         ];
         return view('schedule/list', $data);

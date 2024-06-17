@@ -15,6 +15,7 @@ class ScheduleModel extends BaseModel
         $queryBuilder = $this
             ->select('
                 schedules.id as id,    
+                classes.id as class_id,
                 classes.code as class_code,
                 semesters.semester as semester,
                 subjects.name as subject_name,

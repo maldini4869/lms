@@ -15,8 +15,8 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <form action="/kelas" method="get">
-                <div class="row">
-                    <div class="col-md-5">
+                <div class="row justify-content-between">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="semester_id">Semester</label>
                             <select class="selectpicker form-control" data-style="border-info" id="semester_id" name="semester_id" data-size="10" title="Pilih Semester...">

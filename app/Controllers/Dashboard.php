@@ -4,23 +4,33 @@ namespace App\Controllers;
 
 use App\Models\ScheduleModel;
 use App\Models\SemesterModel;
+use App\Models\StudentModel;
+use App\Models\TeacherModel;
 
 class Dashboard extends BaseController
 {
 
     protected $scheduleModel;
     protected $semesterModel;
+    protected $studentModel;
+    protected $teacherModel;
 
     public function __construct()
     {
         $this->scheduleModel = new ScheduleModel();
         $this->semesterModel = new SemesterModel();
+        $this->studentModel = new StudentModel();
+        $this->teacherModel = new TeacherModel();
     }
 
     public function index()
     {
+        $students = $this->studentModel->findAll();
+        $teachers = $this->teacherModel->findAll();
         $data = [
-            'title' => 'LMS - Dashboard Admin'
+            'title' => 'LMS - Dashboard Admin',
+            'countStudents' => count($students),
+            'countTeachers' => count($teachers)
         ];
         return view('dashboard/admin', $data);
     }

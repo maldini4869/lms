@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 .one-line-text {
   white-space: nowrap;
   overflow: hidden;
