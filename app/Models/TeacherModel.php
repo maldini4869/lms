@@ -8,6 +8,7 @@ class TeacherModel extends BaseModel
     protected $primaryKey = 'id';
     protected $allowedFields = ['user_id', 'full_name', 'nip'];
     protected $useTimestamps = true;
+    protected $with = ['users'];
 
     public function getTeacher($id = null)
     {

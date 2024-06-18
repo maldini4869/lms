@@ -3,23 +3,22 @@
 namespace App\Controllers;
 
 use App\Models\ClassModel;
-use App\Models\ScheduleModel;
 use App\Models\SemesterModel;
-use App\Models\StudentClassModel;
+use App\Models\ClassStudentModel;
 use App\Models\StudentModel;
 
-class StudentClass extends BaseController
+class ClassStudent extends BaseController
 {
 
     protected $classModel;
-    protected $studentClassModel;
+    protected $classStudentModel;
     protected $semesterModel;
     protected $studentModel;
 
     public function __construct()
     {
         $this->classModel = new ClassModel();
-        $this->studentClassModel = new StudentClassModel();
+        $this->classStudentModel = new ClassStudentModel();
         $this->studentModel = new StudentModel();
         $this->semesterModel = new SemesterModel();
     }
@@ -36,11 +35,11 @@ class StudentClass extends BaseController
             $semesterId = $currentSemester;
         }
 
-        $filledClasses = $this->studentClassModel->getStudentClass(null, $semesterId);
+        $filledClasses = $this->classStudentModel->getClassStudent(null, $semesterId);
         $classes = $this->classModel->findAll();
 
         foreach ($classes as $i => $class) {
-            $classes[$i]['student_classes'] = array_filter($filledClasses, fn ($item) => $item['class_id'] == $class['id']);
+            $classes[$i]['class_students'] = array_filter($filledClasses, fn ($item) => $item['class_id'] == $class['id']);
         }
 
         $data = [
@@ -51,32 +50,33 @@ class StudentClass extends BaseController
             'filledClasses' => $filledClasses,
         ];
 
-        return view('student_class/list', $data);
+        return view('class_student/list', $data);
     }
 
     public function detail($classId, $semesterId)
     {
-        $studentsClass = $this->studentClassModel->with('students', true)->where('class_id', $classId)->where('semester_id', $semesterId)->findAll();
+        $classStudents = array_values($this->classStudentModel->with('students')->where('class_id', $classId)->where('semester_id', $semesterId)->findAll());
         $class = $this->classModel->find($classId);
         $semester = $this->semesterModel->find($semesterId);
 
-        $mappedExistingStudentsClass = array_map(fn ($item) => $item['student'], $studentsClass);
+        $mappedExistingStudentsClass = array_map(fn ($item) => $item['student'], $classStudents);
         $existingStudentsClass = array_map('serialize', $mappedExistingStudentsClass);
         $allStudents = array_map('serialize', $this->studentModel->with('users')->findAll());
         $students = array_diff($allStudents, $existingStudentsClass);
 
+
         $data = [
             'title' => 'LMS - Detail Kelas',
-            'studentsClass' => $studentsClass,
+            'classStudents' => $classStudents,
             'class' => $class,
             'semester' => $semester,
             'students' => array_map('unserialize', $students),
         ];
 
-        return view('student_class/detail', $data);
+        return view('class_student/detail', $data);
     }
 
-    public function addStudentClass()
+    public function addClassStudent()
     {
         $rules = [
             'class_id'    => [
@@ -118,7 +118,7 @@ class StudentClass extends BaseController
             ]);
         }
 
-        $result = $this->studentClassModel->insertBatch($sessionStudentData);
+        $result = $this->classStudentModel->insertBatch($sessionStudentData);
         if ($result) {
             session()->setFlashdata('success', 'Siswa Berhasil Ditambahkan!');
         } else {
@@ -128,13 +128,13 @@ class StudentClass extends BaseController
         return redirect()->to("/kelas/$classId/semester/$semesterId");
     }
 
-    public function deleteStudentClass($id)
+    public function deleteClassStudent($id)
     {
-        $studentClass = $this->studentClassModel->find($id);
-        $classId = $studentClass['class_id'];
-        $semesterId = $studentClass['semester_id'];
+        $classStudent = $this->classStudentModel->find($id);
+        $classId = $classStudent['class_id'];
+        $semesterId = $classStudent['semester_id'];
 
-        $this->studentClassModel->delete($id);
+        $this->classStudentModel->delete($id);
 
         session()->setFlashdata('success', 'Siswa Berhasil Berhasil Dihapus!');
 

@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateStudentClass extends Migration
+class CreateClassStudent extends Migration
 {
     public function up()
     {
@@ -44,11 +44,11 @@ class CreateStudentClass extends Migration
         $this->forge->addForeignKey('semester_id', 'semesters', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('class_id', 'classes', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('student_id', 'students', 'id', '', 'CASCADE');
-        $this->forge->createTable('student_classes');
+        $this->forge->createTable('class_students');
     }
 
     public function down()
     {
-        $this->forge->dropTable('student_classes');
+        $this->forge->dropTable('class_students');
     }
 }

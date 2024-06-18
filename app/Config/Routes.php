@@ -34,20 +34,24 @@ $routes->post('/siswa/tambah', 'Student::add', ['filter' => "auth:$roleAdmin"]);
 $routes->get('/siswa/ubah/(:num)', 'Student::edit/$1', ['filter' => "auth:$roleAdmin"]);
 $routes->post('/siswa/ubah/(:num)', 'Student::edit/$1', ['filter' => "auth:$roleAdmin"]);
 
-$routes->get('/kelas', 'StudentClass::index', ['filter' => "auth:$roleAdmin"]);
-$routes->get('/kelas/(:num)/semester/(:num)', 'StudentClass::detail/$1/$2', ['filter' => "auth:$roleAdmin"]);
-$routes->post('/kelas/siswa/tambah', 'StudentClass::addStudentClass', ['filter' => "auth:$roleAdmin"]);
-$routes->delete('/kelas/siswa/(:num)', 'StudentClass::deleteStudentClass/$1', ['filter' => "auth:$roleAdmin"]);
+$routes->get('/kelas', 'ClassStudent::index', ['filter' => "auth:$roleAdmin"]);
+$routes->get('/kelas/(:num)/semester/(:num)', 'ClassStudent::detail/$1/$2', ['filter' => "auth:$roleAdmin"]);
+$routes->post('/kelas/siswa/tambah', 'ClassStudent::addClassStudent', ['filter' => "auth:$roleAdmin"]);
+$routes->delete('/kelas/siswa/(:num)', 'ClassStudent::deleteClassStudent/$1', ['filter' => "auth:$roleAdmin"]);
 
 $routes->get('/jadwal-mapel', 'Schedule::index', ['filter' => "auth:$roleAdmin"]);
 $routes->get('/jadwal-mapel/tambah', 'Schedule::add', ['filter' => "auth:$roleAdmin"]);
 $routes->post('/jadwal-mapel/tambah', 'Schedule::add', ['filter' => "auth:$roleAdmin"]);
 $routes->delete('/jadwal-mapel/(:num)', 'Schedule::delete/$1', ['filter' => "auth:$roleAdmin"]);
 
-$routes->get('/pertemuan/(:num)', 'Session::index/$1', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
-$routes->get('/pertemuan/detail/(:num)', 'Session::detail/$1', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
+$routes->get('/pertemuan/(:num)', 'Session::index/$1', ['filter' => "auth:$roleAdmin,$roleTeacher,$roleStudent"]);
+$routes->get('/pertemuan/detail/(:num)', 'Session::detail/$1', ['filter' => "auth:$roleAdmin,$roleTeacher,$roleStudent"]);
 $routes->post('/pertemuan/item', 'SessionItem::add', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
-$routes->get('/pertemuan/item/download/(:num)', 'SessionItem::download/$1', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
+$routes->get('/pertemuan/item/download/(:num)', 'SessionItem::download/$1', ['filter' => "auth:$roleAdmin,$roleTeacher,$roleStudent"]);
 $routes->delete('/pertemuan/item/(:num)', 'SessionItem::delete/$1', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
-$routes->post('/pertemuan/siswa/tambah', 'Session::addStudent', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
-$routes->post('/pertemuan/item/komen/tambah', 'SessionItem::comment', ['filter' => "auth:$roleAdmin,$roleTeacher"]);
+$routes->post('/pertemuan/item/komen/tambah', 'SessionItem::comment', ['filter' => "auth:$roleAdmin,$roleTeacher,$roleStudent"]);
+$routes->post('/pertemuan/tugas', 'SessionItem::submitAssignment', ['filter' => "auth:$roleStudent"]);
+
+$routes->get('/penilaian', 'Scoring::index', ['filter' => "auth:$roleTeacher"]);
+$routes->get('/penilaian/(:num)', 'Scoring::detail/$1', ['filter' => "auth:$roleTeacher"]);
+$routes->post('/penilaian', 'Scoring::submitScoring', ['filter' => "auth:$roleTeacher"]);

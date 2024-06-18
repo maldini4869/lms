@@ -43,17 +43,17 @@
         <?php foreach ($classes as $class) : ?>
             <div class="col-md-3 mb-4">
                 <a href="kelas/<?= $class['id']; ?>/semester/<?= $selectedSemesterId; ?>" class="no-style-link">
-                    <div class="card <?= count($class['student_classes']) > 0 ? 'border-left-success' : 'border-left-info'; ?> shadow h-100 py-2">
+                    <div class="card <?= count($class['class_students']) > 0 ? 'border-left-success' : 'border-left-info'; ?> shadow h-100 py-2">
                         <div class="card-body">
                             <div class="row no-gutters align-items-center">
                                 <div class="col mr-2">
-                                    <div class="text-xs font-weight-bold <?= count($class['student_classes']) > 0 ? 'text-success' : 'text-info'; ?> text-uppercase mb-1">
+                                    <div class="text-xs font-weight-bold <?= count($class['class_students']) > 0 ? 'text-success' : 'text-info'; ?> text-uppercase mb-1">
                                         kelas <?= $class['grade']; ?>
                                     </div>
-                                    <div class="h5 mb-0 font-weight-bold <?= count($class['student_classes']) > 0 ? 'text-success' : 'text-info'; ?>"><?= $class['code']; ?></div>
+                                    <div class="h5 mb-0 font-weight-bold <?= count($class['class_students']) > 0 ? 'text-success' : 'text-info'; ?>"><?= $class['code']; ?></div>
                                 </div>
                                 <div class="col-auto">
-                                    <?php if (count($class['student_classes']) > 0) : ?>
+                                    <?php if (count($class['class_students']) > 0) : ?>
                                         <i class="fas fa-check-circle text-success"></i>
                                     <?php else : ?>
                                         <i class="fas fa-exclamation-circle"></i>

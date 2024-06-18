@@ -41,15 +41,20 @@
 
                 <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
                     <div class="container">
-                        <a class="navbar-brand" href="#">LMS</a>
+                        <a class="navbar-brand" href="#">LMS <?= session('user_role_id') == 2 ? 'Guru' : 'Siswa'; ?></a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNavDropdown">
                             <ul class="navbar-nav">
                                 <li class="nav-item active">
-                                    <a class="nav-link" href="/dashboard/guru">Home</a>
+                                    <a class="nav-link" href="/dashboard/<?= session('user_role_id') == 2 ? 'guru' : 'siswa'; ?>">Home</a>
                                 </li>
+                                <?php if (session('user_role_id') == 2) : ?>
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="/penilaian">Penilaian</a>
+                                    </li>
+                                <?php endif ?>
                             </ul>
                         </div>
                         <div class="dropdown">
@@ -146,14 +151,26 @@
 
             if (postAttachment.files[0]) {
                 filePreviewContainer.innerHTML = `
-                <div class="d-flex align-items-center bg-light p-3 rounded">
-                    <i class="fas fa-file-alt mr-2" style="font-size: 32px"></i>
-                    <h6 class="mb-0">${postAttachment.files[0].name}</h6>
-                </div>
-            `;
+                    <div class="d-flex align-items-center bg-light p-3 rounded">
+                        <i class="fas fa-file-alt mr-2" style="font-size: 32px"></i>
+                        <h6 class="mb-0 one-line-text">${postAttachment.files[0].name}</h6>
+                    </div>
+                `;
             }
+        }
+    </script>
+    <script>
+        function previewAssignmentFile(postAttachmentId) {
+            const postAttachment = document.querySelector(`#assignment_file${postAttachmentId}`);
+            const filePreviewContainer = document.querySelector('#assignment-file-preview');
 
-
+            if (postAttachment.files[0]) {
+                filePreviewContainer.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center">
+                        <h5 class="mb-0 one-line-text text-center">${postAttachment.files[0].name}</h5>
+                    </div>
+                `;
+            }
         }
     </script>
 </body>

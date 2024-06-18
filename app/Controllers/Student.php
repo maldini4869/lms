@@ -19,7 +19,7 @@ class Student extends BaseController
 
     public function index()
     {
-        $students = $this->studentModel->select('students.id as id, students.user_id as user_id, users.email as email, users.full_name as full_name, students.nisn as nisn, users.is_active as is_active')->join('users', 'users.id = students.user_id')->orderBy('students.id', 'asc')->findAll();
+        $students = array_values($this->studentModel->select('students.id as id, students.user_id as user_id, users.email as email, users.full_name as full_name, students.nisn as nisn, users.is_active as is_active')->join('users', 'users.id = students.user_id')->orderBy('students.id', 'asc')->findAll());
 
         $data = [
             'title' => 'LMS - Siswa',

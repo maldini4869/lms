@@ -4,7 +4,7 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-class CreateSessionItem extends Migration
+class CreateStudentAssignment extends Migration
 {
     public function up()
     {
@@ -15,33 +15,29 @@ class CreateSessionItem extends Migration
                 'unsigned'       => true,
                 'auto_increment' => true,
             ],
-            'session_id' => [
+            'session_item_id' => [
                 'type'           => 'INT',
                 'constraint'     => 11,
                 'unsigned'       => true,
             ],
-            'code' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
-                'null' => true,
-            ],
-            'text' => [
-                'type'       => 'VARCHAR',
-                'constraint' => '255',
+            'student_id' => [
+                'type'           => 'INT',
+                'constraint'     => 11,
+                'unsigned'       => true,
             ],
             'file' => [
                 'type'       => 'VARCHAR',
                 'constraint' => '255',
-                'null' => true,
             ],
-            'type' => [
+            'grade' => [
                 'type'       => 'INT',
                 'constraint' => 11,
+                'null'       => true,
             ],
-            'user_id' => [
-                'type'           => 'INT',
-                'constraint'     => 11,
-                'unsigned'       => true,
+            'feedback' => [
+                'type'       => 'VARCHAR',
+                'constraint' => '255',
+                'null'       => true,
             ],
             'created_at' => [
                 'type' => 'DATETIME',
@@ -54,13 +50,13 @@ class CreateSessionItem extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('session_id', 'sessions', 'id', '', 'CASCADE');
-        $this->forge->addForeignKey('user_id', 'users', 'id', '', 'CASCADE');
-        $this->forge->createTable('session_items');
+        $this->forge->addForeignKey('session_item_id', 'session_items', 'id');
+        $this->forge->addForeignKey('student_id', 'students', 'id', '', 'CASCADE');
+        $this->forge->createTable('student_assignments');
     }
 
     public function down()
     {
-        $this->forge->dropTable('session_items');
+        $this->forge->dropTable('student_assignments');
     }
 }

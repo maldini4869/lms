@@ -8,4 +8,5 @@ class SessionModel extends BaseModel
     protected $primaryKey = 'id';
     protected $allowedFields = ['code', 'schedule_id', 'week'];
     protected $useTimestamps = true;
+    protected $with = ['schedules'];
 }

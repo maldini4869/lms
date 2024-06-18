@@ -8,9 +8,9 @@ class ScheduleModel extends BaseModel
     protected $primaryKey = 'id';
     protected $allowedFields = ['code', 'class_id', 'teacher_id', 'teacher_subject_id', 'semester_id', 'day', 'start_period', 'end_period'];
     protected $useTimestamps = true;
-    protected $with = ['classes', 'teachers_subjects'];
+    protected $with = ['classes', 'teachers_subjects', 'teachers'];
 
-    public function getSchedules($semesterId, $classId = null, $userTeacherId = null)
+    public function getSchedules($semesterId, $class = null, $userTeacherId = null)
     {
         $queryBuilder = $this
             ->select('
@@ -32,8 +32,10 @@ class ScheduleModel extends BaseModel
             ->join('users', 'users.id = teachers.user_id')
             ->where('schedules.semester_id', $semesterId);
 
-        if ($classId) {
-            $queryBuilder->where('schedules.class_id', $classId);
+        if ($class && !is_array($class)) {
+            $queryBuilder->where('schedules.class_id', $class);
+        } elseif ($class && is_array($class)) {
+            $queryBuilder->whereIn('schedules.class_id', $class);
         }
 
         if ($userTeacherId) {

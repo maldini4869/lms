@@ -21,7 +21,7 @@
             <h1 class="h3 mb-2 text-gray-800">Siswa Kelas <?= $class['code']; ?> - Semester <?= $semester['semester']; ?></h1>
         </div>
         <div class="col-md-6">
-            <button class="btn btn-primary float-right" role="button" data-toggle="modal" data-target="#studentClassModal">Tambah Siswa</button>
+            <button class="btn btn-primary float-right" role="button" data-toggle="modal" data-target="#classStudentModal">Tambah Siswa</button>
         </div>
     </div>
 
@@ -40,14 +40,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($studentsClass as $i => $studentsClass) : ?>
+                        <?php foreach ($classStudents as $index => $classStudent) : ?>
                             <tr>
-                                <td><?= $i; ?></td>
-                                <td><?= $studentsClass['student']['user']['full_name']; ?></td>
-                                <td><?= $studentsClass['student']['nisn']; ?></td>
-                                <td><?= $studentsClass['student']['user']['email']; ?></td>
+                                <td><?= $index + 1; ?></td>
+                                <td><?= $classStudent['student']['user']['full_name']; ?></td>
+                                <td><?= $classStudent['student']['nisn']; ?></td>
+                                <td><?= $classStudent['student']['user']['email']; ?></td>
                                 <td>
-                                    <form class="d-inline" action="/kelas/siswa/<?= $studentsClass['id']; ?>" method="post">
+                                    <form class="d-inline" action="/kelas/siswa/<?= $classStudent['id']; ?>" method="post">
                                         <?= csrf_field(); ?>
                                         <input type="hidden" name="_method" value="DELETE">
                                         <button type="submit" style="background: initial; border: initial; color: initial;" onclick="return confirm('Apakah anda yakin?')">
@@ -66,11 +66,11 @@
 </div>
 
 <!-- Add Session Student Modal-->
-<div class="modal fade" id="studentClassModal" tabindex="-1" role="dialog" aria-labelledby="studentClassModalLabel" aria-hidden="true">
+<div class="modal fade" id="classStudentModal" tabindex="-1" role="dialog" aria-labelledby="classStudentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="studentClassModalLabel">Tambah Siswa</h5>
+                <h5 class="modal-title" id="classStudentModalLabel">Tambah Siswa</h5>
                 <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>

@@ -38,108 +38,91 @@
                     <div class="alert alert-danger" role="alert">
                         <?= session()->getFlashdata('failed'); ?>
                     </div>
+                <?php elseif (validation_get_error('assignment_file')) : ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?= validation_get_error('assignment_file'); ?>
+                    </div>
                 <?php endif; ?>
 
                 <!-- Post Form -->
-                <div class="card shadow"">
-                    <div class=" card-body">
+                <?php if (session('user_role_id') == 2) : ?>
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <form action="/pertemuan/item" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <div id="file-preview" class="mb-3"></div>
+                                    <label id="label" for="text">Buat postingan di sini!</label>
 
-                    <form action="/pertemuan/item" method="post" enctype="multipart/form-data">
-                        <div class="form-group">
-                            <div id="file-preview" class="mb-3"></div>
-                            <label id="label" for="text">Buat postingan di sini!</label>
-                            <div class="d-flex">
+                                    <div class="mb-3">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="type" id="diskusi" value="1" checked>
+                                            <label class="form-check-label" for="diskusi">Diskusi</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="type" id="tugas" value="2">
+                                            <label class="form-check-label" for="tugas">Tugas</label>
+                                        </div>
+                                    </div>
 
-                                <input type="text" class="form-control mr-3" id="text" name="text" aria-describedby="emailHelp" placeholder="Tulis disini..">
+                                    <div class="d-flex">
+                                        <input type="text" class="form-control mr-3" id="text" name="text" aria-describedby="emailHelp" placeholder="Tulis disini..">
 
-                                <div class="d-flex align-items-center mr-1">
-                                    <input type="file" class="d-none" id="file" name="file" onchange="previewFile()">
-                                    <label for="file" class="mb-0"><i class="fas fa-paperclip" style="font-size: 24px; cursor: pointer;"></i></label>
+                                        <div class="d-flex align-items-center mr-1 text-secondary">
+                                            <input type="file" class="d-none" id="file" name="file" onchange="previewFile()">
+                                            <label for="file" class="mb-0"><i class="fas fa-paperclip" style="font-size: 24px; cursor: pointer;"></i></label>
+                                        </div>
+
+                                        <input type="hidden" name="session_id" value="<?= $session['id']; ?>">
+
+                                        <button type="submit" class="button-hover text-primary">
+                                            <i class="fas fa-paper-plane" style="font-size: 24px;"></i>
+                                        </button>
+                                    </div>
+
+                                    <div class="text-danger ml-2 mt-2 <?= (validation_get_error('text') || validation_get_error('file')) ? '' : 'd-none'; ?>">
+                                        <?= validation_get_error('text'); ?>
+                                        <br>
+                                        <?= validation_get_error('file'); ?>
+                                    </div>
                                 </div>
-
-                                <input type="hidden" name="session_id" value="<?= $session['id']; ?>">
-                                <input type="hidden" name="type" value="1">
-
-                                <button type="submit" class="button-hover text-primary">
-                                    <i class="fas fa-paper-plane" style="font-size: 24px;"></i>
-                                </button>
-                            </div>
-
-                            <div class="text-danger ml-2">
-                                <?= validation_get_error('text'); ?>
-                                <br>
-                                <?= validation_get_error('file'); ?>
-                            </div>
+                            </form>
                         </div>
-                    </form>
-
-
-
-                </div>
-            </div>
-
-            <?= $this->include('session/post_items'); ?>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow">
-                <div class="d-flex justify-content-between align-items-center card-header">
-                    Siswa (<?= count($session['students']) ?>)
-                    <button type="button" class="button-hover text-primary d-flex align-items-center" data-toggle="modal" data-target="#sessionStudentModal">
-                        <i class="fas fa-plus-circle" style="font-size: 24px;"></i>
-                    </button>
-                </div>
-                <div class="card-body" style="max-height: 320px; <?= count($session['students']) > 0 ? 'overflow-y: scroll;' : ''; ?>">
-                    <?php if (count($session['students']) > 0) :  ?>
-                        <?php foreach ($session['students'] as $student) : ?>
-                            <div class="d-flex align-items-center mb-3">
-                                <img class="img-profile rounded-circle" width="40" src="/img/profile/undraw_profile.svg">
-                                <div class="ml-3">
-                                    <h6 class="mb-0 font-weight-bold one-line-text"><?= $student['user']['full_name']; ?></h6>
-                                    <small><?= $student['nisn']; ?></small>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else : ?>
-                        Belum ada siswa
+                    </div>
+                <?php else : ?>
+                    <?php if (count($session['session_items']) == 0) : ?>
+                        <div class="card shadow py-5 d-flex justify-content-center align-items-center">
+                            Belum Ada Postingan
+                        </div>
                     <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                <?php endif; ?>
 
-<!-- Add Session Student Modal-->
-<div class="modal fade" id="sessionStudentModal" tabindex="-1" role="dialog" aria-labelledby="sessionStudentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="sessionStudentModalLabel">Tambah Siswa</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
+                <?= $this->include('session/post_items'); ?>
             </div>
-            <form action="/pertemuan/siswa/tambah" method="post">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <select class="selectpicker form-control <?= validation_has_error('student_id[]') ? 'is-invalid' : ''; ?>" id="student_id[]" name="student_id[]" value="<?= old('student_id[]'); ?>" title="Pilih Siswa..." multiple data-live-search="true" data-size="10" data-style="border-info">
-                            <?php foreach ($students as $student) : ?>
-                                <option value="<?= $student['id']; ?>" data-content="<h5><span class='badge badge-primary h-100'><?= $student['nisn']; ?> - <?= $student['user']['full_name']; ?></span></h5>">
-                                </option>
-                            <?php endforeach ?>
-                        </select>
-                        <div class="invalid-feedback ml-2">
-                            <?= validation_get_error('student_id[]'); ?>
-                        </div>
 
-                        <input type="hidden" name="session_id" value="<?= $session['id']; ?>">
+            <!-- View Siswa -->
+            <div class="col-md-3">
+                <div class="card shadow">
+                    <div class="d-flex justify-content-between align-items-center card-header">
+                        Siswa (<?= count($classStudents) ?>)
+                    </div>
+                    <div class="card-body" style="max-height: 320px; overflow-y: auto">
+                        <?php if (count($classStudents) > 0) :  ?>
+                            <?php foreach ($classStudents as $classStudent) : ?>
+                                <div class="student-item  d-flex align-items-center mb-3">
+                                    <img class="img-profile rounded-circle" width="40" src="/img/profile/<?= $classStudent['student']['user']['profile_picture']; ?>">
+                                    <div class="ml-3">
+                                        <h6 class="mb-0 font-weight-bold one-line-text"><?= $classStudent['student']['user']['full_name']; ?></h6>
+                                        <small><?= $classStudent['student']['nisn']; ?></small>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            Belum ada siswa
+                        <?php endif; ?>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" type="submit">Tambah</button>
-                </div>
-            </form>
+            </div>
+
         </div>
     </div>
 </div>

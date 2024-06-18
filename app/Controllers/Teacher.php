@@ -25,7 +25,7 @@ class Teacher extends BaseController
 
     public function index()
     {
-        $teachers = $this->teacherModel->select('teachers.id as id, teachers.user_id as user_id, users.email as email, users.full_name as full_name, teachers.nip as nip, users.is_active as is_active')->join('users', 'users.id = teachers.user_id')->orderBy('users.full_name', 'asc')->findAll();
+        $teachers = array_values($this->teacherModel->select('teachers.id as id, teachers.user_id as user_id, users.email as email, users.full_name as full_name, teachers.nip as nip, users.is_active as is_active')->join('users', 'users.id = teachers.user_id')->orderBy('users.full_name', 'asc')->findAll());
 
         $data = [
             'title' => 'LMS - Guru',

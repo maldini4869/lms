@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ClassStudentModel;
 use App\Models\ScheduleModel;
 use App\Models\SessionItemModel;
 use App\Models\SessionModel;
@@ -15,6 +16,7 @@ class Session extends BaseController
     protected $scheduleModel;
     protected $sessionStudentModel;
     protected $studentModel;
+    protected $classStudentModel;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class Session extends BaseController
         $this->scheduleModel = new ScheduleModel();
         $this->sessionStudentModel = new SessionStudentModel();
         $this->studentModel = new StudentModel();
+        $this->classStudentModel = new ClassStudentModel();
     }
 
     public function index($schedule_id)
@@ -41,61 +44,20 @@ class Session extends BaseController
 
     public function detail($session_id)
     {
-        $session = $this->sessionModel->with(['schedules', 'students'])->where('id', $session_id)->first();
+        $session = $this->sessionModel->with(['schedules'])->where('id', $session_id)->first();
 
-        $session['session_items'] = $this->sessionItemModel->with('session_item_comments')->where('session_id', $session['id'])->orderBy('created_at', 'desc')->findAll();
+        $session['session_items'] = $this->sessionItemModel->with(['session_item_comments', 'student_assignments'])->where('session_id', $session['id'])->orderBy('created_at', 'desc')->findAll();
 
-        $sessionStudents = array_map('serialize', $session['students']);
-
-        $allStudents = array_map('serialize', $this->studentModel->with('users')->findAll());
-
-        $students = array_diff($allStudents, $sessionStudents);
+        $classStudents = $this->classStudentModel->with('students')
+            ->where('semester_id', $session['schedule']['semester_id'])
+            ->where('class_id', $session['schedule']['class_id'])
+            ->findAll();
 
         $data = [
             'title' => 'LMS - Pertemuan',
             'session' => $session,
-            'students' => array_map('unserialize', $students),
+            'classStudents' => $classStudents,
         ];
         return view('session/detail', $data);
-    }
-
-    public function addStudent()
-    {
-        $rules = [
-            'session_id'    => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Session id harus diisi',
-                ]
-            ],
-            'student_id[]'    => [
-                'rules' => 'required',
-                'errors' => [
-                    'required' => 'Siswa harus diisi',
-                ]
-            ],
-        ];
-
-        $input = $this->request->getPost(array_keys($rules));
-
-        if (!$this->validateData($input, $rules)) {
-            return redirect()->to('/pertemuan/detail/' . $input['session_id'])->withInput();
-        }
-
-        $studentIds = $this->request->getVar('student_id[]');
-
-        $sessionStudentData = [];
-        foreach ($studentIds as $studentId) {
-            array_push($sessionStudentData, ['session_id' => $input['session_id'], 'student_id' => $studentId]);
-        }
-
-        $result = $this->sessionStudentModel->insertBatch($sessionStudentData);
-        if ($result) {
-            session()->setFlashdata('success', 'Siswa Berhasil Dibuat!');
-        } else {
-            session()->setFlashdata('failed', 'Siswa Gagal Dibuat!');
-        }
-
-        return redirect()->to('/pertemuan/detail/' . $input['session_id']);
     }
 }

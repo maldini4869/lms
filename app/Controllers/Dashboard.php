@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ClassStudentModel;
 use App\Models\ScheduleModel;
 use App\Models\SemesterModel;
 use App\Models\StudentModel;
@@ -14,6 +15,7 @@ class Dashboard extends BaseController
     protected $semesterModel;
     protected $studentModel;
     protected $teacherModel;
+    protected $classStudentModel;
 
     public function __construct()
     {
@@ -21,6 +23,7 @@ class Dashboard extends BaseController
         $this->semesterModel = new SemesterModel();
         $this->studentModel = new StudentModel();
         $this->teacherModel = new TeacherModel();
+        $this->classStudentModel = new ClassStudentModel();
     }
 
     public function index()
@@ -47,7 +50,7 @@ class Dashboard extends BaseController
             $semesterId = $currentSemester;
         }
 
-        $schedules = $this->scheduleModel->getSchedules((int)$semesterId, null, session('user_id'));
+        $schedules = $this->scheduleModel->getSchedules($semesterId, null, session('user_id'));
         $schedulesMap = [];
         foreach ($days as $day) {
             $schedulesMap[$day] = [];
@@ -79,8 +82,42 @@ class Dashboard extends BaseController
 
     public function student()
     {
+        $days = [1, 2, 3, 4, 5];
+        $currentSemester = get_site_settings('CURRENT_SEMESTER');
+        $semesterIdParam = $this->request->getVar('semester_id');
+        if ($semesterIdParam) {
+            $semesterId = $semesterIdParam;
+        } else {
+            $semesterId = $currentSemester;
+        }
+        $semester = $this->semesterModel->find($semesterId);
+
+        $student = $this->studentModel->where('user_id', session('user_id'))->first();
+
+        $classStudents = array_values($this->classStudentModel
+            ->where('semester_id', $semesterId)
+            ->where('student_id', $student['id'])
+            ->findAll());
+
+        $classIds = array_map(fn ($classStudent) => $classStudent['class_id'], $classStudents);
+
+        $schedules = $this->scheduleModel->getSchedules($semesterId, $classIds);
+        $schedulesMap = [];
+        foreach ($days as $day) {
+            $schedulesMap[$day] = [];
+
+            foreach ($schedules as $schedule) {
+                if ($schedule['day'] == $day) {
+                    $schedulesMap[$day][] = $schedule;
+                }
+            }
+        }
+
         $data = [
-            'title' => 'LMS - Dashboard Siswa'
+            'title' => 'LMS - Dashboard Siswa',
+            'semester' => $semester,
+            'schedules' => $schedules,
+            'schedulesMap' => $schedulesMap,
         ];
         return view('dashboard/student', $data);
     }
