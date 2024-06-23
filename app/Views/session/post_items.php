@@ -1,7 +1,7 @@
 <!-- Post Items -->
-<div class="mt-4">
+<div>
     <?php foreach ($session['session_items'] as $sessionItem) : ?>
-        <div class="card shadow mt-3">
+        <div id="<?= $sessionItem['code']; ?>" class="card shadow mb-3">
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div class="d-flex align-items-center">
@@ -14,7 +14,12 @@
 
                     <div class="d-flex">
                         <div class="<?= session('user_role_id') == 2 ? 'mr-3' : ''; ?>">
-                            <span class="badge badge-pill <?= $sessionItem['type'] == 1 ? 'badge-info' : 'badge-warning'; ?>"><?= $sessionItem['type'] == 1 ? 'Diskusi' : 'Tugas'; ?></span>
+                            <?php if ($sessionItem['type'] == 2 && session('user_role_id') == 2) : ?>
+                                <a href="/penilaian/<?= $sessionItem['id']; ?>" class="no-style-link">
+                                    <span class="badge badge-pill badge-primary"><?= $sessionItem['code']; ?></span>
+                                </a>
+                            <?php endif; ?>
+                            <span class="badge badge-pill ml-1 <?= $sessionItem['type'] == 1 ? 'badge-info' : 'badge-warning'; ?>"><?= $sessionItem['type'] == 1 ? 'Diskusi' : 'Tugas'; ?></span>
                         </div>
                         <div class="dropdown text-center <?= session('user_role_id') == 2 ? '' : 'd-none'; ?>" style="width: 20px;">
                             <i class="fas fa-ellipsis-v w-100" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;"></i>
@@ -91,7 +96,7 @@
                                                             <div>Nilai</div>
                                                             <div>:</div>
                                                         </div>
-                                                        <div class="col-md-8 pl-0">
+                                                        <div class="col-md-8 pl-0 font-weight-bold">
                                                             <?= $filteredAssignments[0]['grade']; ?>
                                                         </div>
                                                         <div class="col-md-4 pr-2 d-flex justify-content-between">
@@ -99,7 +104,11 @@
                                                             <div>:</div>
                                                         </div>
                                                         <div class="col-md-8 pl-0">
-                                                            <?= $filteredAssignments[0]['feedback']; ?>
+                                                            <?php if ($filteredAssignments[0]['feedback']) : ?>
+                                                                <?= $filteredAssignments[0]['feedback']; ?>
+                                                            <?php else : ?>
+                                                                -
+                                                            <?php endif ?>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -131,7 +140,7 @@
             <div class="card-footer bg-white">
                 <?php if ($sessionItem['session_item_comments']) : ?>
                     <?php foreach ($sessionItem['session_item_comments'] as $sessionItemComment) :  ?>
-                        <div class="d-flex align-items-start">
+                        <div class="d-flex align-items-start mb-3">
                             <img class="img-profile rounded-circle mr-2" width="32" src="/img/profile/<?= $sessionItemComment['user']['profile_picture']; ?>">
 
                             <div>

@@ -5,8 +5,8 @@
 <!-- Begin Page Content -->
 <div class="container">
 
-    <!-- Page Heading -->
-    <h1 class="h3 mb-4 text-gray-800">List Pertemuan <?= $subTitle; ?></h1>
+    <!-- Breadcrumb -->
+    <?= view_cell('BreadcrumbCell', ['breadcrumbs' => $breadcrumbs]) ?>
 
     <?php foreach ($sessions as $session) : ?>
         <div class="card mb-4 border-left-info">

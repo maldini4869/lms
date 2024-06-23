@@ -61,7 +61,7 @@
     </li>
 
     <!-- Nav Item - Kelas -->
-    <li class="nav-item <?= current_url(true)->getSegment(1) === 'siswa' ? 'active' : ''; ?>">
+    <li class="nav-item <?= current_url(true)->getSegment(1) === 'kelas' ? 'active' : ''; ?>">
         <a class="nav-link" href="/kelas">
             <i class="fas fa-chalkboard"></i>
             <span>Kelas</span></a>

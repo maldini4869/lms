@@ -132,7 +132,7 @@ class Student extends BaseController
     public function edit($id)
     {
         if (!$this->request->is('post')) {
-            $student = $this->studentModel->select('students.id as id, students.user_id as user_id, users.email as email, users.full_name as full_name, students.nisn as nisn, users.profile_picture as profile_picture, users.phone_number as phone_number, users.is_active as is_active')->join('user', 'users.id = students.user_id')->where('students.id', $id)->orderBy('students.id', 'asc')->first();
+            $student = $this->studentModel->select('students.id as id, students.user_id as user_id, users.email as email, users.full_name as full_name, students.nisn as nisn, users.profile_picture as profile_picture, users.phone_number as phone_number, users.is_active as is_active')->join('users', 'users.id = students.user_id')->where('students.id', $id)->orderBy('students.id', 'asc')->first();
 
             $data = [
                 'title' => 'LMS - Ubah Siswa',
@@ -140,6 +140,14 @@ class Student extends BaseController
             ];
 
             return view('student/edit', $data);
+        }
+
+        $nisn = $this->request->getVar('nisn');
+        $oldNisn = $this->request->getVar('old_nisn');
+        if ($oldNisn == $nisn) {
+            $nisnRules = 'required|max_length[255]';
+        } else {
+            $nisnRules = 'required|max_length[255]|is_unique[students.nisn]';
         }
 
         $rules = [
@@ -151,7 +159,7 @@ class Student extends BaseController
                 ]
             ],
             'nisn'    => [
-                'rules' => 'required|max_length[255]|is_unique[students.nisn]',
+                'rules' => $nisnRules,
                 'errors' => [
                     'required' => 'NIP harus diisi',
                     'max_length' => 'Jumlah karakter melebihi batas',

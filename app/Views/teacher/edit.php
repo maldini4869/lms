@@ -82,6 +82,7 @@
                                     </option>
                                 <?php endforeach ?>
                             </select>
+                            <small id="subject_id[]" class="form-text text-muted">*Mata pelajaran yang sudah punya jadwal tidak dapat dihilangkan.</small>
                             <div class="invalid-feedback ml-2">
                                 <?= validation_get_error('subject_id[]'); ?>
                             </div>
@@ -90,6 +91,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-3 float-right">Ubah</button>
+                <a href="<?= previous_url(); ?>" class="btn btn-outline-primary mt-3 mr-3 float-right">Kembali</a>
             </form>
         </div>
     </div>

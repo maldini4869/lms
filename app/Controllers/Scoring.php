@@ -2,8 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Models\ClassStudentModel;
+use App\Models\StudentClassModel;
 use App\Models\ScheduleModel;
+use App\Models\SemesterModel;
 use App\Models\SessionItemModel;
 use App\Models\StudentAssignmentModel;
 use App\Models\TeacherModel;
@@ -13,25 +14,44 @@ class Scoring extends BaseController
     protected $sessionItemModel;
     protected $scheduleModel;
     protected $teacherModel;
-    protected $classStudentModel;
+    protected $StudentClassModel;
     protected $studentAssignmentModel;
+    protected $semesterModel;
 
     public function __construct()
     {
         $this->sessionItemModel = new SessionItemModel();
         $this->scheduleModel = new ScheduleModel();
         $this->teacherModel = new TeacherModel();
-        $this->classStudentModel = new ClassStudentModel();
+        $this->StudentClassModel = new StudentClassModel();
         $this->studentAssignmentModel = new StudentAssignmentModel();
+        $this->semesterModel = new SemesterModel();
     }
 
     public function index()
     {
-        $assignmentSessionItems = $this->sessionItemModel->getSessionItems(session('user_id'), 2);
+        // Semester
+        $currentSemesterId = get_site_settings('CURRENT_SEMESTER_ID');
+        $semesterIdParam = $this->request->getVar('semester_id');
+
+        if ($semesterIdParam) {
+            $semesterId = $semesterIdParam;
+        } else {
+            $semesterId = $currentSemesterId;
+        }
+        $semesters = $this->semesterModel->findAll();
+
+        // Code
+        $assigmentCode = $this->request->getVar('assignment_code');
+        $assignmentSessionItems = $this->sessionItemModel->teacherSessionItems(session('user_id'), 2, $semesterId, $assigmentCode);
 
         $data = [
             'title' => 'LMS - Penilaian',
-            'assignmentSessionItems' => $assignmentSessionItems
+            'assignmentSessionItems' => $assignmentSessionItems,
+            'semesters' => $semesters,
+            'semesters' => $semesters,
+            'selectedSemesterId' => $semesterId
+
         ];
         return view('scoring/list', $data);
     }
@@ -40,7 +60,7 @@ class Scoring extends BaseController
     {
         $sessionItem = $this->sessionItemModel->with('sessions')->find($sessionItemId);
 
-        $classStudents = $this->classStudentModel->with('students')
+        $studentClasses = $this->StudentClassModel->with('students')
             ->where('semester_id', $sessionItem['session']['schedule']['semester_id'])
             ->where('class_id', $sessionItem['session']['schedule']['class_id'])
             ->findAll();
@@ -49,11 +69,22 @@ class Scoring extends BaseController
             ->where('session_item_id', $sessionItemId)
             ->findAll();
 
+        $breadcrumbs = [
+            [
+                'label' => "Penilaian",
+                'link' => '/penilaian'
+            ],
+            [
+                'label' => "Tugas $sessionItem[code]",
+            ]
+        ];
+
         $data = [
             'title' => 'LMS - Penilaian',
             'sessionItem' => $sessionItem,
-            'classStudents' => $classStudents,
+            'studentClasses' => $studentClasses,
             'studentAssignments' => $studentAssignments,
+            'breadcrumbs' => $breadcrumbs,
         ];
         return view('scoring/detail', $data);
     }
@@ -68,9 +99,10 @@ class Scoring extends BaseController
                 ]
             ],
             'grade'    => [
-                'rules' => 'required',
+                'rules' => 'required|numeric',
                 'errors' => [
                     'required' => 'Nilai harus diisi',
+                    'numeric' => 'Nilai harus berupa angka',
                 ]
             ],
             'session_item_id'    => [
@@ -107,5 +139,14 @@ class Scoring extends BaseController
         }
 
         return redirect()->to('/penilaian' . '/' . $input['session_item_id']);
+    }
+
+    public function download($student_assignment_id)
+    {
+        $assignment = $this->studentAssignmentModel->find($student_assignment_id);
+
+        $filepath = ROOTPATH . 'public/files/session-item-assignments/' . $assignment['file'];
+
+        return $this->response->download($filepath, null);
     }
 }

@@ -20,7 +20,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-2 ml-auto">
                         <div class="form-group">
                             <label for="" style="color: white">.</label>
                             <button type="submit" class="btn btn-primary btn-block">Cari</a>

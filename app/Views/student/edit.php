@@ -13,6 +13,7 @@
             <form action="/siswa/ubah/<?= $student['id']; ?>" method="post" enctype="multipart/form-data">
                 <?= csrf_field(); ?>
                 <input type="hidden" name="old_profile_picture" value="<?= $student['profile_picture']; ?>">
+                <input type="hidden" name="old_nisn" value="<?= $student['nisn']; ?>">
                 <input type="hidden" name="user_id" value="<?= $student['user_id']; ?>">
                 <div class="row">
                     <div class="col-md-6">
@@ -71,7 +72,8 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary mt-3 float-right">Ubah</button>
+                <button type="submit" class="btn btn-primary mt-3 float-right ml-3">Ubah</button>
+                <a href="<?= previous_url(); ?>" class="btn btn-outline-primary mt-3 float-right">Kembali</a>
             </form>
         </div>
     </div>

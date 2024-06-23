@@ -55,6 +55,11 @@
                                         <a class="nav-link" href="/penilaian">Penilaian</a>
                                     </li>
                                 <?php endif ?>
+                                <?php if (session('user_role_id') == 3) : ?>
+                                    <li class="nav-item active">
+                                        <a class="nav-link" href="/tugas">Tugas</a>
+                                    </li>
+                                <?php endif ?>
                             </ul>
                         </div>
                         <div class="dropdown">

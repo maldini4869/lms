@@ -117,6 +117,7 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-3 float-right">Tambah</button>
+                <a href="<?= previous_url(); ?>" class="btn btn-outline-primary mt-3 mr-3 float-right">Kembali</a>
             </form>
         </div>
     </div>

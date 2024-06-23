@@ -5,6 +5,9 @@
 <!-- Begin Page Content -->
 <div class="container">
 
+    <!-- Breadcrumb -->
+    <?= view_cell('BreadcrumbCell', ['breadcrumbs' => $breadcrumbs]) ?>
+
     <!-- Hero -->
     <div style=" background-image: url('/img/default-session-banner.jpg'); width: 100%; height: 360px; background-position: center; background-size: cover; box-shadow: 0px -120px 70px -70px rgba(0,0,0,0.75) inset;-webkit-box-shadow: 0px -120px 70px -70px rgba(0,0,0,0.75) inset; -moz-box-shadow: 0px -120px 70px -70px rgba(0,0,0,0.75) inset; " class=" d-flex p-3 rounded align-items-end">
         <h1 class="text-white">Pertemuan <?= $session['week']; ?></h1>
@@ -46,7 +49,7 @@
 
                 <!-- Post Form -->
                 <?php if (session('user_role_id') == 2) : ?>
-                    <div class="card shadow">
+                    <div class="card shadow mb-4">
                         <div class="card-body">
                             <form action="/pertemuan/item" method="post" enctype="multipart/form-data">
                                 <div class="form-group">
@@ -90,7 +93,7 @@
                     </div>
                 <?php else : ?>
                     <?php if (count($session['session_items']) == 0) : ?>
-                        <div class="card shadow py-5 d-flex justify-content-center align-items-center">
+                        <div class="card shadow py-5 mb-4 d-flex justify-content-center align-items-center">
                             Belum Ada Postingan
                         </div>
                     <?php endif; ?>
@@ -103,16 +106,16 @@
             <div class="col-md-3">
                 <div class="card shadow">
                     <div class="d-flex justify-content-between align-items-center card-header">
-                        Siswa (<?= count($classStudents) ?>)
+                        Siswa (<?= count($studentClasses) ?>)
                     </div>
                     <div class="card-body" style="max-height: 320px; overflow-y: auto">
-                        <?php if (count($classStudents) > 0) :  ?>
-                            <?php foreach ($classStudents as $classStudent) : ?>
+                        <?php if (count($studentClasses) > 0) :  ?>
+                            <?php foreach ($studentClasses as $studentClass) : ?>
                                 <div class="student-item  d-flex align-items-center mb-3">
-                                    <img class="img-profile rounded-circle" width="40" src="/img/profile/<?= $classStudent['student']['user']['profile_picture']; ?>">
+                                    <img class="img-profile rounded-circle" width="40" src="/img/profile/<?= $studentClass['student']['user']['profile_picture']; ?>">
                                     <div class="ml-3">
-                                        <h6 class="mb-0 font-weight-bold one-line-text"><?= $classStudent['student']['user']['full_name']; ?></h6>
-                                        <small><?= $classStudent['student']['nisn']; ?></small>
+                                        <h6 class="mb-0 font-weight-bold one-line-text"><?= $studentClass['student']['user']['full_name']; ?></h6>
+                                        <small><?= $studentClass['student']['nisn']; ?></small>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

@@ -35,13 +35,13 @@ class Schedule extends BaseController
     public function index()
     {
         $days = [1, 2, 3, 4, 5];
-        $currentSemester = get_site_settings('CURRENT_SEMESTER');
+        $currentSemesterId = get_site_settings('CURRENT_SEMESTER_ID');
         $semesterIdParam = $this->request->getVar('semester_id');
 
         if ($semesterIdParam) {
             $semesterId = $semesterIdParam;
         } else {
-            $semesterId = $currentSemester;
+            $semesterId = $currentSemesterId;
         }
 
         $schedules = $this->scheduleModel->getSchedules($semesterId);
@@ -203,6 +203,22 @@ class Schedule extends BaseController
 
     public function delete($id)
     {
+        $schedule = $this->scheduleModel->with('sessions')->find($id);
+        $sessions = $schedule['sessions'];
+
+        $flag = 0;
+        foreach ($sessions as $key => $session) {
+            if ($session['session_items']) {
+                $flag += 1;
+            }
+        }
+
+        if ($flag > 0) {
+            session()->setFlashdata('failed', 'Jadwal tidak bisa dihapus karena sudah memiliki aktivitas!');
+
+            return redirect()->to('/jadwal-mapel');
+        }
+
         $this->scheduleModel->delete($id);
 
         session()->setFlashdata('success', 'Jadwal dan Pertemuan Berhasil Dihapus!');

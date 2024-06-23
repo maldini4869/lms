@@ -25,12 +25,10 @@
         </div>
     </div>
 
-
-
     <div class="card shadow mb-4">
         <div class="card-body">
             <form action="/jadwal-mapel" method="get">
-                <div class="row justify-content-between">
+                <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="semester_id">Semester</label>
@@ -42,7 +40,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-2">
+                    <div class="col-md-2 ml-auto">
                         <div class="form-group">
                             <label for="" style="color: white">.</label>
                             <button type="submit" class="btn btn-primary btn-block">Cari</a>

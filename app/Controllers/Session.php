@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\ClassStudentModel;
+use App\Models\StudentClassModel;
 use App\Models\ScheduleModel;
 use App\Models\SessionItemModel;
 use App\Models\SessionModel;
@@ -16,7 +16,7 @@ class Session extends BaseController
     protected $scheduleModel;
     protected $sessionStudentModel;
     protected $studentModel;
-    protected $classStudentModel;
+    protected $StudentClassModel;
 
     public function __construct()
     {
@@ -25,7 +25,7 @@ class Session extends BaseController
         $this->scheduleModel = new ScheduleModel();
         $this->sessionStudentModel = new SessionStudentModel();
         $this->studentModel = new StudentModel();
-        $this->classStudentModel = new ClassStudentModel();
+        $this->StudentClassModel = new StudentClassModel();
     }
 
     public function index($schedule_id)
@@ -34,10 +34,27 @@ class Session extends BaseController
         $subTitle = $schedule['class']['code'] . ' - ' . $schedule['teachers_subject']['subject']['name'];
         $sessions = $this->sessionModel->with('schedules')->where('schedule_id', $schedule_id)->findAll();
 
+        if (session('user_role_id') == 2) {
+            $dashboard = 'guru';
+        } else if (session('user_role_id') == 3) {
+            $dashboard = 'siswa';
+        }
+
+        $breadcrumbs = [
+            [
+                'label' => "Pertemuan",
+                'link' => "/dashboard/$dashboard"
+            ],
+            [
+                'label' => $subTitle,
+            ]
+        ];
+
         $data = [
             'title' => 'LMS - Pertemuan',
             'subTitle' => $subTitle,
             'sessions' => $sessions,
+            'breadcrumbs' => $breadcrumbs,
         ];
         return view('session/list', $data);
     }
@@ -48,15 +65,41 @@ class Session extends BaseController
 
         $session['session_items'] = $this->sessionItemModel->with(['session_item_comments', 'student_assignments'])->where('session_id', $session['id'])->orderBy('created_at', 'desc')->findAll();
 
-        $classStudents = $this->classStudentModel->with('students')
+        $studentClasses = $this->StudentClassModel->with('students')
             ->where('semester_id', $session['schedule']['semester_id'])
             ->where('class_id', $session['schedule']['class_id'])
             ->findAll();
 
+        $subTitle = $session['schedule']['class']['code'] . ' - ' . $session['schedule']['teachers_subject']['subject']['name'];
+
+        $scheduleId = $session['schedule']['id'];
+
+        if (session('user_role_id') == 2) {
+            $dashboard = 'guru';
+        } else if (session('user_role_id') == 3) {
+            $dashboard = 'siswa';
+        }
+
+        $breadcrumbs = [
+            [
+                'label' => "Pertemuan",
+                'link' => "/dashboard/$dashboard"
+            ],
+            [
+                'label' => $subTitle,
+                'link' => "/pertemuan/$scheduleId"
+            ],
+            [
+                'label' => "Pertemuan ke $session[week]",
+                'link' => '/pertemuan/guru'
+            ]
+        ];
+
         $data = [
             'title' => 'LMS - Pertemuan',
             'session' => $session,
-            'classStudents' => $classStudents,
+            'studentClasses' => $studentClasses,
+            'breadcrumbs' => $breadcrumbs,
         ];
         return view('session/detail', $data);
     }

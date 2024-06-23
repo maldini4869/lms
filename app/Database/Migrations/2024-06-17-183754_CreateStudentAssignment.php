@@ -50,7 +50,7 @@ class CreateStudentAssignment extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('session_item_id', 'session_items', 'id');
+        $this->forge->addForeignKey('session_item_id', 'session_items', 'id', 'CASCADE');
         $this->forge->addForeignKey('student_id', 'students', 'id', '', 'CASCADE');
         $this->forge->createTable('student_assignments');
     }

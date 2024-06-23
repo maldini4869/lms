@@ -45,4 +45,17 @@ class ScheduleModel extends BaseModel
 
         return $queryBuilder->orderBy('start_period', 'asc')->findAll();
     }
+
+    function checkSchedules($teacher_id, $subject_id)
+    {
+        $queryBuilder = $this
+            ->select('
+                schedules.id as id
+            ')
+            ->join('teachers_subjects', 'teachers_subjects.id = schedules.teacher_subject_id')
+            ->where('teachers_subjects.teacher_id', $teacher_id)
+            ->whereIn('teachers_subjects.subject_id', $subject_id);
+
+        return $queryBuilder->countAllResults();
+    }
 }

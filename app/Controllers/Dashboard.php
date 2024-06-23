@@ -2,9 +2,12 @@
 
 namespace App\Controllers;
 
-use App\Models\ClassStudentModel;
+use App\Models\StudentClassModel;
 use App\Models\ScheduleModel;
 use App\Models\SemesterModel;
+use App\Models\SessionItemCommentModel;
+use App\Models\SessionItemModel;
+use App\Models\StudentAssignmentModel;
 use App\Models\StudentModel;
 use App\Models\TeacherModel;
 
@@ -15,7 +18,10 @@ class Dashboard extends BaseController
     protected $semesterModel;
     protected $studentModel;
     protected $teacherModel;
-    protected $classStudentModel;
+    protected $StudentClassModel;
+    protected $studentAssignmentModel;
+    protected $sessionItemModel;
+    protected $sessionItemCommentModel;
 
     public function __construct()
     {
@@ -23,7 +29,10 @@ class Dashboard extends BaseController
         $this->semesterModel = new SemesterModel();
         $this->studentModel = new StudentModel();
         $this->teacherModel = new TeacherModel();
-        $this->classStudentModel = new ClassStudentModel();
+        $this->StudentClassModel = new StudentClassModel();
+        $this->studentAssignmentModel = new StudentAssignmentModel();
+        $this->sessionItemModel = new SessionItemModel();
+        $this->sessionItemCommentModel = new SessionItemCommentModel();
     }
 
     public function index()
@@ -41,7 +50,7 @@ class Dashboard extends BaseController
     public function teacher()
     {
         $days = [1, 2, 3, 4, 5];
-        $currentSemester = get_site_settings('CURRENT_SEMESTER');
+        $currentSemester = get_site_settings('CURRENT_SEMESTER_ID');
         $semesterIdParam = $this->request->getVar('semester_id');
 
         if ($semesterIdParam) {
@@ -82,8 +91,9 @@ class Dashboard extends BaseController
 
     public function student()
     {
+        // Schedules
         $days = [1, 2, 3, 4, 5];
-        $currentSemester = get_site_settings('CURRENT_SEMESTER');
+        $currentSemester = get_site_settings('CURRENT_SEMESTER_ID');
         $semesterIdParam = $this->request->getVar('semester_id');
         if ($semesterIdParam) {
             $semesterId = $semesterIdParam;
@@ -94,12 +104,12 @@ class Dashboard extends BaseController
 
         $student = $this->studentModel->where('user_id', session('user_id'))->first();
 
-        $classStudents = array_values($this->classStudentModel
+        $studentClasses = array_values($this->StudentClassModel
             ->where('semester_id', $semesterId)
             ->where('student_id', $student['id'])
             ->findAll());
 
-        $classIds = array_map(fn ($classStudent) => $classStudent['class_id'], $classStudents);
+        $classIds = array_map(fn ($studentClass) => $studentClass['class_id'], $studentClasses);
 
         $schedules = $this->scheduleModel->getSchedules($semesterId, $classIds);
         $schedulesMap = [];
@@ -113,11 +123,26 @@ class Dashboard extends BaseController
             }
         }
 
+        // Assignment
+        $submittedAssignments = $this->studentAssignmentModel
+            ->where('student_id', $student['id'])
+            ->countAllResults();
+
+        $totalStudentAssignments = $this->sessionItemModel->totalStudentAssignments($student['id']);
+
+        // Comments
+        $totalComments = $this->sessionItemCommentModel
+            ->where('user_id', session('user_id'))
+            ->countAllResults();
+
         $data = [
             'title' => 'LMS - Dashboard Siswa',
             'semester' => $semester,
             'schedules' => $schedules,
             'schedulesMap' => $schedulesMap,
+            'submittedAssignments' => $submittedAssignments,
+            'totalStudentAssignments' => $totalStudentAssignments,
+            'totalComments' => $totalComments,
         ];
         return view('dashboard/student', $data);
     }

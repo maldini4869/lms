@@ -31,8 +31,18 @@ class TeacherSubjectModel extends BaseModel
         return $queryBuilder->findAll();
     }
 
-    public function subject()
+    public function checkTeacherSubjectSchedules($teacher_id, $subject_id)
     {
-        return $this->hasOne('App\Models\SubjectModel', 'subject_id');
+        $queryBuilder = $this
+            ->select('
+                teachers_subjects.id as id,
+                teachers_subjects.teacher_id as teacher_id,
+                teachers_subjects.subject_id as subject_id
+            ')
+            ->join('schedules', 'schedules.teacher_subject_id = teachers_subjects.id')
+            ->where('teachers_subjects.teacher_id', $teacher_id)
+            ->whereIn('teachers_subjects.subject_id', $subject_id);
+
+        return $queryBuilder->findAll();
     }
 }

@@ -11,7 +11,7 @@ class SiteSettingSeeder extends Seeder
     {
         $data = [
             [
-                'slug' => 'CURRENT_SEMESTER',
+                'slug' => 'CURRENT_SEMESTER_ID',
                 'value' => '1',
                 'created_at'    => Time::now(),
                 'updated_at'    => Time::now(),

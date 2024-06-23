@@ -36,7 +36,7 @@ class CreateTeacherSubject extends Migration
         ]);
 
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('teacher_id', 'teachers', 'id');
+        $this->forge->addForeignKey('teacher_id', 'teachers', 'id', '', 'CASCADE');
         $this->forge->addForeignKey('subject_id', 'subjects', 'id');
         $this->forge->createTable('teachers_subjects');
     }

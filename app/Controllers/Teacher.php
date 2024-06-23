@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ScheduleModel;
 use App\Models\SubjectModel;
 use App\Models\TeacherModel;
 use App\Models\TeacherSubjectModel;
@@ -14,6 +15,7 @@ class Teacher extends BaseController
     protected $teacherModel;
     protected $subjectModel;
     protected $teacherSubjectModel;
+    protected $scheduleModel;
 
     public function __construct()
     {
@@ -21,6 +23,7 @@ class Teacher extends BaseController
         $this->teacherModel = new TeacherModel();
         $this->subjectModel = new SubjectModel();
         $this->teacherSubjectModel = new TeacherSubjectModel();
+        $this->scheduleModel = new ScheduleModel();
     }
 
     public function index()
@@ -139,7 +142,10 @@ class Teacher extends BaseController
         $subjectIds = $this->request->getVar('subject_id[]');
         $teacherSubjectData = [];
         foreach ($subjectIds as $subjectId) {
-            array_push($teacherSubjectData, ['teacher_id' => $teacherId, 'subject_id' => $subjectId]);
+            array_push($teacherSubjectData, [
+                'teacher_id' => $teacherId,
+                'subject_id' => $subjectId
+            ]);
         }
 
         $result = $this->teacherSubjectModel->insertBatch($teacherSubjectData);
@@ -158,7 +164,8 @@ class Teacher extends BaseController
         if (!$this->request->is('post')) {
             $teacher = $this->teacherModel->getTeacher($id);
             $subjects = $this->subjectModel->findAll();
-            $teacherSubjects = $this->teacherSubjectModel->getTeacherSubject($id);
+            $currentSemesterId = get_site_settings('CURRENT_SEMESTER_ID');
+            $teacherSubjects = $this->teacherSubjectModel->getTeacherSubject($id, $currentSemesterId);
 
             $data = [
                 'title' => 'LMS - Ubah Guru',
@@ -254,32 +261,53 @@ class Teacher extends BaseController
 
         $this->teacherModel->save($teacherData);
 
+        // Subject
         $subjectIds = $this->request->getVar('subject_id[]');
         $oldTeacherSubjects = unserialize(base64_decode($this->request->getVar('old_teacher_subject')));
 
-        $oldTeacherSubjects = array_map(function ($teacherSubject) {
-            return ['teacher_id' => $teacherSubject['teacher_id'], 'subject_id' => $teacherSubject['subject_id']];
+        $oldSubjectIds = array_map(function ($teacherSubject) {
+            return $teacherSubject['subject_id'];
         }, $oldTeacherSubjects);
 
+        $checkSchedules = $this->teacherSubjectModel->checkTeacherSubjectSchedules($id, $oldSubjectIds);
+        $checkSchedules = array_map(function ($item) {
+            return $item['subject_id'];
+        }, $checkSchedules);
+
+        if (count($checkSchedules) == 0) {
+            $this->teacherSubjectModel
+                ->where('teacher_id', $id)
+                ->whereIn('subject_id', $oldSubjectIds)
+                ->delete();
+
+            $subjectIdsData = $subjectIds;
+        } else {
+            $diffOldSubjectIds = array_diff($oldSubjectIds, $checkSchedules);
+            $this->teacherSubjectModel
+                ->where('teacher_id', $id)
+                ->whereIn('subject_id', $diffOldSubjectIds)
+                ->delete();
+
+            $diffSubjectIds = array_diff($subjectIds, $checkSchedules);
+            $subjectIdsData = $diffSubjectIds;
+        }
+
         $teacherSubjectData = [];
-        foreach ($subjectIds as $subjectId) {
+        foreach ($subjectIdsData as $subjectId) {
             array_push($teacherSubjectData, ['teacher_id' => $id, 'subject_id' => $subjectId]);
         }
 
-        $result = null;
-        if ($oldTeacherSubjects == $teacherSubjectData) {
-            $result = true;
-        } else {
-            $this->teacherSubjectModel
-                ->where('teacher_id', $id)
-                ->delete();
-
+        $result = true;
+        if (count($teacherSubjectData) > 0) {
             $result = $this->teacherSubjectModel->insertBatch($teacherSubjectData);
         }
 
-
-        if ($result) {
+        if ($result && $checkSchedules == 0) {
             session()->setFlashdata('success', 'Guru Berhasil Diubah!');
+        } else if ($result && $checkSchedules > 0 && count($teacherSubjectData) > 0) {
+            session()->setFlashdata('success', 'Guru berhasil diubah, Mata Pelajaran ditambah!');
+        } else if ($result && $checkSchedules > 0 && count($teacherSubjectData) == 0) {
+            session()->setFlashdata('success', 'Guru berhasil diubah!');
         } else {
             session()->setFlashdata('failed', 'Guru Gagal Diubah!');
         }
