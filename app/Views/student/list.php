@@ -34,7 +34,7 @@
                         <tr>
                             <th>No</th>
                             <th>Nama</th>
-                            <th>NIP</th>
+                            <th>NISN</th>
                             <th>Email</th>
                             <th>Aksi</th>
                         </tr>

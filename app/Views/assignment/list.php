@@ -28,7 +28,7 @@
     </div>
 
     <?php foreach ($studentSessionItems as $item) : ?>
-        <div class="card shadow">
+        <div class="card shadow mb-3">
             <div class="card-header font-weight-bold d-flex justify-content-between align-items-center">
                 <div>
                     <?= $item['code']; ?>
@@ -88,7 +88,7 @@
                         <a href="/pertemuan/detail/<?= $item['session_id']; ?>#<?= $item['code']; ?>" class="btn btn-block btn-info">Detail Pertemuan</a>
                     </div>
                     <div class="col-md-6">
-                        <button class="btn btn-block btn-outline-secondary h-100" type="button" data-toggle="modal" data-target="#detailAssignmentModal<?= $item['id']; ?>">Detail</button>
+                        <button class="btn btn-block btn-outline-secondary h-100" type="button" data-toggle="modal" data-target="#detailAssignmentModal<?= $item['id']; ?>" <?= $item['assignment'] ? '' : 'disabled'; ?>>Detail</button>
                     </div>
                 </div>
 
@@ -105,33 +105,35 @@
                                 </button>
                             </div>
                             <div class="modal-body" style="font-size: 20px;">
-                                <div class="row">
-                                    <div class="col-md-4 pr-2 d-flex justify-content-between">
-                                        <div>File</div>
-                                        <div>:</div>
+                                <?php if ($item['assignment']) : ?>
+                                    <div class="row">
+                                        <div class="col-md-4 pr-2 d-flex justify-content-between">
+                                            <div>File</div>
+                                            <div>:</div>
+                                        </div>
+                                        <div class="col-md-8 pl-0 one-line-text">
+                                            <?= $item['assignment']['file']; ?>
+                                        </div>
+                                        <div class="col-md-4 pr-2 d-flex justify-content-between">
+                                            <div>Nilai</div>
+                                            <div>:</div>
+                                        </div>
+                                        <div class="col-md-8 pl-0 font-weight-bold">
+                                            <?= $item['assignment']['grade']; ?>
+                                        </div>
+                                        <div class="col-md-4 pr-2 d-flex justify-content-between">
+                                            <div>Feedback</div>
+                                            <div>:</div>
+                                        </div>
+                                        <div class="col-md-8 pl-0">
+                                            <?php if ($item['assignment']['feedback']) : ?>
+                                                <?= $item['assignment']['feedback']; ?>
+                                            <?php else : ?>
+                                                -
+                                            <?php endif ?>
+                                        </div>
                                     </div>
-                                    <div class="col-md-8 pl-0 one-line-text">
-                                        <?= $item['assignment']['file']; ?>
-                                    </div>
-                                    <div class="col-md-4 pr-2 d-flex justify-content-between">
-                                        <div>Nilai</div>
-                                        <div>:</div>
-                                    </div>
-                                    <div class="col-md-8 pl-0 font-weight-bold">
-                                        <?= $item['assignment']['grade']; ?>
-                                    </div>
-                                    <div class="col-md-4 pr-2 d-flex justify-content-between">
-                                        <div>Feedback</div>
-                                        <div>:</div>
-                                    </div>
-                                    <div class="col-md-8 pl-0">
-                                        <?php if ($item['assignment']['feedback']) : ?>
-                                            <?= $item['assignment']['feedback']; ?>
-                                        <?php else : ?>
-                                            -
-                                        <?php endif ?>
-                                    </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

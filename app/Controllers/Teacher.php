@@ -278,7 +278,7 @@ class Teacher extends BaseController
             $this->teacherSubjectModel
                 ->where('teacher_id', $id)
                 ->whereIn('subject_id', $oldSubjectIds)
-                ->delete();
+                ->deleteBatch();
 
             $subjectIdsData = $subjectIds;
         } else {
@@ -286,7 +286,7 @@ class Teacher extends BaseController
             $this->teacherSubjectModel
                 ->where('teacher_id', $id)
                 ->whereIn('subject_id', $diffOldSubjectIds)
-                ->delete();
+                ->deleteBatch();
 
             $diffSubjectIds = array_diff($subjectIds, $checkSchedules);
             $subjectIdsData = $diffSubjectIds;
@@ -302,12 +302,8 @@ class Teacher extends BaseController
             $result = $this->teacherSubjectModel->insertBatch($teacherSubjectData);
         }
 
-        if ($result && $checkSchedules == 0) {
+        if ($result) {
             session()->setFlashdata('success', 'Guru Berhasil Diubah!');
-        } else if ($result && $checkSchedules > 0 && count($teacherSubjectData) > 0) {
-            session()->setFlashdata('success', 'Guru berhasil diubah, Mata Pelajaran ditambah!');
-        } else if ($result && $checkSchedules > 0 && count($teacherSubjectData) == 0) {
-            session()->setFlashdata('success', 'Guru berhasil diubah!');
         } else {
             session()->setFlashdata('failed', 'Guru Gagal Diubah!');
         }

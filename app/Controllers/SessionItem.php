@@ -104,8 +104,11 @@ class SessionItem extends BaseController
     {
         $sessionItem = $this->sessionItemModel->find($session_item_id);
 
-        $filepath = ROOTPATH . 'public/files/session-items/' . $sessionItem['file'];
-        unlink($filepath);
+
+        if ($sessionItem['file'] != null) {
+            $filepath = ROOTPATH . 'public/files/session-items/' . $sessionItem['file'];
+            unlink($filepath);
+        }
 
         $result = $this->sessionItemModel->delete($session_item_id);
         if ($result) {
